@@ -292,7 +292,7 @@ if (isset($_SESSION['idUser'])) {
         <div style="padding-bottom: 100px; ">
         <div class="content fixed-top d-flex" >
 
-            <a class="btn btn-primary"  href="acceuil.php">Acceuil </a>
+            <a class="btn btn-success"  href="acceuil.php">Acceuil </a>
 
             <a class="btn btn-success" href="../projets/ajoutProjet.php">New Project</a>
             <a class="btn btn-success" href="../taches/ajoutTaches.php">New Task</a>

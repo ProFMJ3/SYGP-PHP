@@ -42,6 +42,7 @@ CREATE TABLE IF NOT EXISTS Taches (
 
 ALTER TABLE Taches MODIFY statut ENUM('En cours', 'Terminé') DEFAULT "A faire";
 ALTER TABLE Taches MODIFY priorite  ENUM('Elevée', 'Moyenne', 'Faible') ;
+ALTER TABLE Taches CHANGE dateDebut dateCreation  DATETIME DEFAULT NOW() ;
 ALTER TABLE Taches ADD COLUMN fichier  VARCHAR(150)  AFTER progression;
 
 

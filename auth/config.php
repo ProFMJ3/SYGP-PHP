@@ -13,7 +13,7 @@
 
     try {
         $pdo = new PDO("mysql:host=$host;dbname=$db;charset=$charset", $user, $pass);
-        echo 'Yes, Connection is successful !!';
+        //echo 'Yes, Connection is successful !!';
     } catch (Exception $e) {
        echo("Une erreur s'est produite");
     }
