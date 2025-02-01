@@ -37,9 +37,9 @@ if (!isset($_SESSION['idUser'])){
 
 
             if ($result) {
-                //$message1 = "Projet est ajouté avec succès";
-                header('Location: ../Dashboard/dash.php');
-                exit();
+                $messageSuccess = "Projet est ajouté avec succès";
+                //header('Location: ../Dashboard/dash.php');
+                //exit();
             } else {
 
                 echo("Une erreur s'est survenu");
@@ -149,11 +149,72 @@ if (!isset($_SESSION['idUser'])){
 
 
         }
+        .btn-cont {
+            display: flex;
+            justify-content: space-between; /* Place les liens aux extrémités gauche et droite */
+            align-items: center;
+            padding: 10px;
+            margin: 20px 0;
+            background-color: gray;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+            height: 100px;
+        }
+
+        .btn-acceuil a ,
+        .btn-liste a  {
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            text-decoration: none;
+            color: white;
+            background-color: #007bff;
+            border-radius: 8px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+
+        }
+
+        .btn-acceuil a:hover,
+        .btn-liste a:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        .taches-success{
+            font-weight: bold;
+            font-size: 20px;
+            position:relative;
+            animation: bougermessage 5s linear infinite ;
+
+
+        }
+        @keyframes bougermessage {
+            from {
+
+                left: -150px
+            }to {
+                 left: 150px;
+             }
+
+        }
 
     </style>
 </head>
 <body>
 
+<div class="btn-cont">
+    <div class="btn-acceuil">
+        <a href="../Dashboard/acceuil.php" class="btn btn-primary">Acceuil</a>
+    </div>
+    <?php if (!empty($messageSuccess)) : ?>
+        <div class="taches-success" style="color: #0056b3;"><?= $messageSuccess; ?></div>
+    <?php endif; ?>
+
+    <div class="btn-liste">
+        <a href="../Dashboard/dash.php" class="btn btn-primary">Dashborad</a>
+</div>
+</div>
 <div class="container">
 
     <h2> Nouveau Projet</h2>

@@ -21,6 +21,7 @@ if (isset($_SESSION['idUser'])) {
 
     //Récupérer l'ID
     $idUser = $_SESSION['idUser'];
+    $idUser=3;
 
 //    try {
         //Récupérer les projets de chaque utilisateur
@@ -47,18 +48,41 @@ if (isset($_SESSION['idUser'])) {
         $requete3 = $pdo->prepare("SELECT Users.username, Users.email FROM Collaboration LEFT JOIN Users ON Collaboration.idUser = Users.idUser WHERE  idProjet =?");
         $requete3->execute(array($projet['idProjet']));
 
-        if ($requete3){
-            $valeurs = $requete3->fetchAll(PDO::FETCH_ASSOC);
-            foreach($valeurs as $val)
-            {
-                echo ('</br>'.$projet['idProjet']. ' ' .$val['username'] . ' ' . $val['email']) . '</br>';
+        $requete4 = $pdo->prepare("SELECT DISTINCT nomTache, statut, dateEcheance FROM Taches WHERE idProjet =? AND idUser=?");
+        $requete4->execute(array($projet['idProjet'], $idUser));
+
+//        if ($requete3){
+//            $valeurs = $requete3->fetchAll(PDO::FETCH_ASSOC);
+//            foreach($valeurs as $val)
+//            {
+//                echo ('</br>'.$projet['idProjet']. ' ' .$val['username'] . ' ' . $val['email']) . '</br>';
+//
+//
+//            }
+//
+//        }else{
+//            echo ('Aucun');
+//        }
+        if ($requete4){
+            $valeurs4 = $requete4->fetchAll(PDO::FETCH_ASSOC);
+
+            if($valeurs4){
 
 
+                foreach($valeurs4 as $val4)
+                {
+                    echo ('</br>'.$projet['idProjet']. ' - ' .$val4['nomTache'] . ' - ' . $val4['statut']. ' - ' . $val4['dateEcheance']) . '</br>';
+
+
+                }
+
+            }else{
+                echo '</br>Aucune tâche pour le projet ' . $projet['nomProjet'] . '</br>';
             }
-
         }else{
-            echo ('Aucun');
+            echo ("Erreur de récuperation");
         }
+
         //$valeurs = $requete3->fetch();
 
 

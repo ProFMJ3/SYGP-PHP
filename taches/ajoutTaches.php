@@ -59,7 +59,7 @@ if (isset($_SESSION['idUser'])){
                         $pro->execute(array($idProjet));
 
                         $nm =$pro ->fetch(PDO::FETCH_ASSOC);
-                        $messageSuccess = "Tache " . $nom ."a été ajouté avec succès au projet". ' '.$nm['nomProjet'] ;
+                        $messageSuccess = "Tâche " . $nom ." a été ajouté avec succès au projet". ' '.$nm['nomProjet'] ;
                         //header('Location: ../Dashboard/dash.php');
                     } else {
                         $message[] = "Erreur SQL : " . implode(" ", $sql->errorInfo());
@@ -230,6 +230,7 @@ if (isset($_SESSION['idUser'])){
     </div>
 
 </div>
+
 <div class="container">
     <h2> Nouvelle Tâche</h2>
 

@@ -3,7 +3,7 @@
 
 session_start();
 
- //Vérifier si l'utilisateur est connecté
+//Vérifier si l'utilisateur est connecté
 if (isset($_SESSION['idUser'])) {
 
     include('../auth/config.php');
@@ -12,10 +12,10 @@ if (isset($_SESSION['idUser'])) {
 
     try {
         //Récupérer les projets de chaque utilisateur
-        $requete1 = $pdo->prepare("SELECT idProjet, nomProjet, descriptions, dateCreation, dateFin, etat FROM Projets WHERE idUser = ?");
-        $requete1->execute(array($idUser));
+        $profil = $pdo->prepare("SELECT idUser, username, email, passwords FROM Users WHERE idUser = ?"); // dateInscription,
+        $profil->execute(array($idUser));
 
-        $projets= $requete1->fetchAll(PDO::FETCH_ASSOC);
+        $info= $profil->fetch(PDO::FETCH_ASSOC);
 
         //Avoir le nombre de projets crée par chaque user
         $requete2 = $pdo->prepare("SELECT COUNT(*) FROM projets WHERE idUser = ?");
@@ -288,8 +288,8 @@ if (isset($_SESSION['idUser'])) {
 
 
 
-    <div class="dashboard-container" >
-        <div style="padding-bottom: 100px; ">
+<div class="dashboard-container" >
+    <div style="padding-bottom: 100px; ">
         <div class="content fixed-top d-flex" >
 
             <a class="btn btn-success"  href="acceuil.php">Acceuil </a>
@@ -298,143 +298,108 @@ if (isset($_SESSION['idUser'])) {
             <a class="btn btn-success" href="../taches/ajoutTaches.php">New Task</a>
             <a class="btn btn-success" href="#">Assigner</a>
 
-            <form style="height: 50px" action="../projets/collaboration.php" method="POST" class="d-flex gap-3 mt-4 g-3">
-                <div>
-                    <?php
-                        //if ($messa)
+        </div>
+
+    </div>
+
+    <!-- <h2 style="text-align: center; background-color: #343a40; padding: 0; border-bottom-right-radius: 8px;" class="mb-5 " >Bienvenue sur votre tableau de bord</h2>-->
+
+    <div class="d-flex" style="margin:0;">
+
+        <div class="sidebar p-3">
+            <h4 class="text-white">Mon Dashboard</h4>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#"> <i class="bi bi-house-fill"></i> Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#"><i class="bi bi-folder"></i> Mes Projets</a>
+                    <ul class="nav flex-column ms-3">
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="#"><i class="bi bi-check-circle"></i> Tâches</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#"><i class="bi bi-people"></i> Membres du Projet</a>
+                        </li>
+
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#"><i class="bi bi-person"></i> Mon Compte</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#"><i class="bi bi-bell"></i> Notifications</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="../auth/inscription.php"><i class="bi bi-person-plus"></i> Nouveau Compte</a>
+                </li>
+                <li>
+                    <a class="decon" href="../auth/deconnexion.php"> <i class="bi bi-person-fill-dash"></i> Se déconnecter</a>
+                </li>
+            </ul>
+        </div>
+
+
+        <div class="projets">
+
+            <?php
+
+            if($info) {
+
+//                echo ("<h1 class='titre' >Vous avez créé $n Projet(s)</h1>");
+
+//                    $requete3 = $pdo->prepare("SELECT COUNT(idUser) AS nbreCollaboration FROM Collaboration WHERE  idProjet =?");
+//                    $requete3->execute(array($projet['idProjet']));
+//
+//                    //$valeurs = $requete3->fetch();
+//                    $valeurs = $requete3->fetch(PDO::FETCH_ASSOC);
+
                     ?>
-                </div>
-                <label style="color: white; font-weight: bold" for="nom" class="form-label ">Collaboration</label>
-                <select  class="form-select" name="projet" id="projet" required>
+
+                    <div class="projet-every" >
+                        <h1>L'information de mon compte </h1>
 
 
 
 
-                        <option class="form-control" value="" disabled selected> Select the Projet</option>
-                        <?php
-                        $sql = $pdo->prepare("SELECT idProjet, nomProjet FROM Projets WHERE idUser =?");
 
-                        if($sql->execute(array($idUser))){
-                            ?>
-                            <?php
-                            while ($resultats = $sql->fetch())
-                            {
-                                ?>
-
-                                <option class="form-control" value="<?=htmlspecialchars($resultats['idProjet']);?>"> <?php echo(($resultats['nomProjet'])); ?> </option>
-
-                                <?php
-                            } ;
-                        }
+                        <p class="descriptionProjet">Nom d'utilisateur : <?php echo ($info['username']); ?> </p>
+                        <p> <?php echo htmlspecialchars($info['email']); ?>  </p>
+                        <p> <?php echo htmlspecialchars($info['dateInscription']); ?>  </p>
 
 
-                        ?>
-                </select>
-
-                <input class="form-control"  type="text" id="nom" name="nom" placeholder="username du collaborateur" required>
-                <button type="submit" class="btn btn-primary " href="#">Collaborer</button>
-
-            </form>
-        </div>
-
-        </div>
-
-<!-- <h2 style="text-align: center; background-color: #343a40; padding: 0; border-bottom-right-radius: 8px;" class="mb-5 " >Bienvenue sur votre tableau de bord</h2>-->
-
-        <div class="d-flex" style="margin:0;">
-            <!-- Menu de navigation -->
-            <div class="sidebar p-3">
-                <h4 class="text-white">Mon Dashboard</h4>
-                <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#"> <i class="bi bi-house-fill"></i> Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="bi bi-folder"></i> Mes Projets</a>
-                        <ul class="nav flex-column ms-3">
-
-                            <li class="nav-item">
-                                <a class="nav-link" href="#"><i class="bi bi-check-circle"></i> Tâches</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#"><i class="bi bi-people"></i> Membres du Projet</a>
-                            </li>
-
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="../auth/monCompte.php"><i class="bi bi-person"></i> Mon Compte</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="bi bi-bell"></i> Notifications</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="../auth/inscription.php"><i class="bi bi-person-plus"></i> Nouveau Compte</a>
-                    </li>
-                    <li>
-                        <a class="decon" href="../auth/deconnexion.php"> <i class="bi bi-person-fill-dash"></i> Se déconnecter</a>
-                    </li>
-                </ul>
-            </div>
-
-
-            <div class="projets">
-
-                <?php
-
-                    if($projets ) {
-
-                       echo ("<h1 class='titre' >Vous avez créé $n Projet(s)</h1>");
-                        foreach($projets as $projet){
-                            $requete3 = $pdo->prepare("SELECT COUNT(idUser) AS nbreCollaboration FROM Collaboration WHERE  idProjet =?");
-                            $requete3->execute(array($projet['idProjet']));
-
-                            //$valeurs = $requete3->fetch();
-                            $valeurs = $requete3->fetch(PDO::FETCH_ASSOC);
-
-                            ?>
-                                <div class="projet-every" >
-
-                                    <h4 class="titreProjet"><?php echo ($projet['nomProjet']); ?> Crée : <?php echo $projet['dateCreation']; ?> </h4>
-
-
-                                    <label for=""> </label>
-                                    <p class="descriptionProjet">DESCRIPTION DU PROJET : <?php echo ($projet['descriptions']); ?> </p>
-                                    <p style="color: gold; font-weight: bold; font-size: 20px "> <?php echo htmlspecialchars($projet['etat']); ?>  </p>
-                                    <span style="color: red; font-weight: bold"> DEADLINE : <?php echo htmlspecialchars($projet['dateFin']); ?>  </span>
-                                    <span style="color: white; font-weight: bold"> Nombre de Collaborateurs : <?php echo intval($valeurs['nbreCollaboration']); ?>  </span>
-                                    <a href="../taches/ajoutTaches.php" class="btn-success">Vos Tâches</a>
-                                    <a href=" ../projets/modifierProjet.php?idProjet= <?=$projet['idProjet'];?>" style="color: grey" class="btn btn-warning"> <i class="fas fa-edit" ></i> </a>
-                                </div>
+                        <a href=" ../projets/modifierProjet.php?idUser= <?=$info['idUser'];?>" style="color: grey" class="btn btn-warning">  <i class="fas fa-edit" ></i> </a>
+                    </div>
 
 
 
-                <?php
-                        }
+                    <?php
 
-                    }else{
-                        ?>
-                        <p class="aucun-projet" >Vous n'avez créé aucun projet</p>
-                <?php
-                    }
+
+            }else{
                 ?>
-            </div>
+                <p class="aucun-projet" >Vous n'avez créé aucun projet</p>
+                <?php
+            }
+            ?>
         </div>
-
-
-
     </div>
 
 
 
-    <footer class="mon-footer" >
-        <p>Vos données sont biens protégés. </p>
-    </footer>
+</div>
 
-    <script>
-        function CollabortionSucces(){
-            return console("Collaboration a été effectué avec succès !!");
-        }
-    </script>
+
+
+<footer class="mon-footer" >
+    <p>Vos données sont biens protégés. </p>
+</footer>
+
+<script>
+    function CollabortionSucces(){
+        return console("Collaboration a été effectué avec succès !!");
+    }
+</script>
 </body>
 </html>
