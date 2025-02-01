@@ -172,88 +172,50 @@ if (isset($_SESSION['idUser'])) {
             color: #00aeff;
         }
 
-
-
-        .projets{
-            width:100%;
-            height: 500px;
-            min-height: 100vh;
+        .profil{
+            width:50%;
+            max-width:100vh;
+            height: 50%;
+            max-height: 80vh;
+            margin:auto;
+            border-radius:10px;
+            background-color: darkgray;
+            padding-bottom: 50px;
             align-items: center;
-            margin: auto;
-            border-radius: 10px;
+            display: flex;
             flex-direction: column;
-            gap:10px;
-
-
 
 
         }
 
-        .projets h1{
+        .profil h1{
             padding-bottom:30px ;
             text-align: center;
             justify-content: center;
-            color: green;
+            color: white;
             font-family: 'Times New Roman';
             flex-direction: column;
             align-items: center;
-
-        }
-
-        .projet-every{
-            max-width:100vh;
-            margin:30px auto;
-            border-radius:10px;
-            background-color: darkgray;
-            display: flex;
-            flex-direction: column;
-            padding-bottom: 50px;
-            align-items: center;
-            border:5px solid teal;
-
-
+            font-weight: bold;
 
         }
 
 
 
-        .projet-every p{
-            text-align: center;
+        .profil p{
+            text-align: right;
             padding-top: 10px;
-            display: flex;
-            justify-content: center;
+            justify-content: right;
             font-weight: normal;
             font-family: "Times New Roman", sans-serif;
-
-        }
-        .projet-every h4{
-            padding-bottom:20px ;
-            text-align: center;
-            justify-content: center;
-            color: green;
-            font-family: 'Times New Roman', sans-serif;
-            align-content: center;
-            justify-items: center;
-            font-weight: bold;
-
-
+            color: black;
 
         }
 
-        .projet-every a{
+
+
+        .profil a{
             justify-content: center;
-
-        }
-
-        .aucun-projet{
-            text-align: center;
-            justify-items: center;
-            justify-content: center;
-            align-content: center;
-            font-weight: bold;
-            font-family: "Arial Black";
-            font-size: 30px;
-
 
         }
 
@@ -310,7 +272,7 @@ if (isset($_SESSION['idUser'])) {
             <h4 class="text-white">Mon Dashboard</h4>
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a class="nav-link active" href="#"> <i class="bi bi-house-fill"></i> Dashboard</a>
+                    <a class="nav-link active" href="../Dashboard/dash.php"> <i class="bi bi-house-fill"></i> Dashboard</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#"><i class="bi bi-folder"></i> Mes Projets</a>
@@ -341,7 +303,7 @@ if (isset($_SESSION['idUser'])) {
         </div>
 
 
-        <div class="projets">
+        <div class="profil">
 
             <?php
 
@@ -357,33 +319,19 @@ if (isset($_SESSION['idUser'])) {
 
                     ?>
 
-                    <div class="projet-every" >
-                        <h1>L'information de mon compte </h1>
 
-
-
-
-
-                        <p class="descriptionProjet">Nom d'utilisateur : <?php echo ($info['username']); ?> </p>
-                        <p> <?php echo htmlspecialchars($info['email']); ?>  </p>
-                        <p> <?php echo htmlspecialchars($info['dateInscription']); ?>  </p>
-
-
-                        <a href=" ../projets/modifierProjet.php?idUser= <?=$info['idUser'];?>" style="color: grey" class="btn btn-warning">  <i class="fas fa-edit" ></i> </a>
-                    </div>
-
-
+                        <h1>L'information de votre compte </h1>
+                        <p>Nom d'utilisateur : <?php echo ($info['username']); ?> </p>
+                        <p>Email : <?php echo htmlspecialchars($info['email']); ?>  </p>
+                        <p> <?php echo ($info['passwords']); ?>  </p>
+                        <a href=" ../projets/modifierProjet.php?idUser= <?=$info['idUser'];?>" style="color: grey" class="btn btn-warning"> Modifier Profil <i class="fas fa-edit" ></i> </a>
 
                     <?php
 
-
-            }else{
-                ?>
-                <p class="aucun-projet" >Vous n'avez créé aucun projet</p>
-                <?php
             }
             ?>
         </div>
+
     </div>
 
 
