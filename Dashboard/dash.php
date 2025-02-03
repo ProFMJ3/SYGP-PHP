@@ -204,12 +204,12 @@ if (isset($_SESSION['idUser'])) {
             max-width:100vh;
             margin:30px auto;
             border-radius:10px;
-            background-color: darkgray;
+            background-color: #F8F9FA;
             display: flex;
             flex-direction: column;
             padding-bottom: 50px;
             align-items: center;
-            border:5px solid teal;
+            border:2px solid #00796B;
 
 
 
@@ -239,6 +239,16 @@ if (isset($_SESSION['idUser'])) {
 
 
         }
+        .descriptionProjet{
+            color: black;
+            text-align: justify;
+            line-height: 1.6;
+            font-size: 16px;
+            margin: 10px 0;
+            background-color: rgba(0, 123, 255, 0.05);
+            padding: 10px;
+            border-radius: 8px;
+        }
 
         .projet-every a{
             justify-content: center;
@@ -261,6 +271,20 @@ if (isset($_SESSION['idUser'])) {
         form a:hover{
             background-color:darkblue;
             color:darkorange;
+
+        }
+
+        .center{
+            justify-content: center;
+            text-align: center;
+            align-content: center;
+            margin-bottom: 20px;
+
+        }
+
+        .btn1{
+            background-color: #FFA500;
+            transition: background-color 0.3s ease;
 
         }
         /*footer{
@@ -300,9 +324,9 @@ if (isset($_SESSION['idUser'])) {
 
             <form style="height: 50px" action="../projets/collaboration.php" method="POST" class="d-flex gap-3 mt-4 g-3">
                 <div>
-                    <?php
-                        //if ($messa)
-                    ?>
+                    <?php if (!empty($messageSuccess)) : ?>
+                        <div class="taches-success" style="color: #0056b3;"><?= $messageSuccess; ?></div>
+                    <?php endif; ?>
                 </div>
                 <label style="color: white; font-weight: bold" for="nom" class="form-label ">Collaboration</label>
                 <select  class="form-select" name="projet" id="projet" required>
@@ -350,7 +374,7 @@ if (isset($_SESSION['idUser'])) {
                         <a class="nav-link active" href="#"> <i class="bi bi-house-fill"></i> Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="bi bi-folder"></i> Mes Projets</a>
+                        <a class="nav-link" href="../projets/userProjets.php"><i class="bi bi-folder"></i> Mes Projets</a>
                         <ul class="nav flex-column ms-3">
 
                             <li class="nav-item">
@@ -363,7 +387,7 @@ if (isset($_SESSION['idUser'])) {
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="../auth/monCompte.php"><i class="bi bi-person"></i> Mon Compte</a>
+                        <a class="nav-link" href="../auth/userCompte.php"><i class="bi bi-person"></i> Mon Compte</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#"><i class="bi bi-bell"></i> Notifications</a>
@@ -402,9 +426,14 @@ if (isset($_SESSION['idUser'])) {
                                     <p class="descriptionProjet">DESCRIPTION DU PROJET : <?php echo ($projet['descriptions']); ?> </p>
                                     <p style="color: gold; font-weight: bold; font-size: 20px "> <?php echo htmlspecialchars($projet['etat']); ?>  </p>
                                     <span style="color: red; font-weight: bold"> DEADLINE : <?php echo htmlspecialchars($projet['dateFin']); ?>  </span>
-                                    <span style="color: white; font-weight: bold"> Nombre de Collaborateurs : <?php echo intval($valeurs['nbreCollaboration']); ?>  </span>
-                                    <a href="../taches/ajoutTaches.php" class="btn-success">Vos Tâches</a>
-                                    <a href=" ../projets/modifierProjet.php?idProjet= <?=$projet['idProjet'];?>" style="color: grey" class="btn btn-warning"> <i class="fas fa-edit" ></i> </a>
+                                    <span style="color: black; font-weight: bold"> Nombre de Collaborateurs : <?php echo intval($valeurs['nbreCollaboration']); ?> </span>
+
+                                    <a href="../taches/ajoutTaches.php" class=" btn-success">Vos Tâches</a>
+                                    <div class="center">
+                                        <a href=" ../projets/modifierProjet.php?idProjet= <?=$projet['idProjet'];?>" style="color: white" class="btn1 btn-warning"><i class="fas fa-edit"></i>   Modifier le projet</a>
+
+
+                                    </div>
                                 </div>
 
 

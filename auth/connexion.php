@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['username'],$_POST['pa
     $req->execute(array('username' =>$username));
     $user = $req->fetch();
 
-    if ($user && password_verify($password, $user['passwords'])) {
+    if ($user && $password == $user['passwords']) {
 
 
         //session_regenerate_id(true);
@@ -95,11 +95,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['username'],$_POST['pa
     margin: 15px;
     height: 30px;
     border: 2px solid darkgray;
-
     }
+
     input::placeholder{
     font-weight: lighter;
-    font-family: "Times New Roman";
+    font-family: "Times New Roman", sans-serif;
     color: gray;
 
 

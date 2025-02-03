@@ -2,45 +2,44 @@
 <?php
 
 session_start();
+include('../auth/config.php');
 
 //Vérifier si l'utilisateur est connecté
-if (isset($_SESSION['idUser'])) {
+if(isset($_SESSION['idUser'])) {
 
-    include('../auth/config.php');
-    //Récupérer l'ID
+
     $idUser = $_SESSION['idUser'];
 
-    try {
-        //Récupérer les projets de chaque utilisateur
-        $profil = $pdo->prepare("SELECT idUser, username, email, passwords FROM Users WHERE idUser = ?"); // dateInscription,
-        $profil->execute(array($idUser));
-
-        $info= $profil->fetch(PDO::FETCH_ASSOC);
-
-        //Avoir le nombre de projets crée par chaque user
-        $requete2 = $pdo->prepare("SELECT COUNT(*) FROM projets WHERE idUser = ?");
-        $requete2->execute(array($idUser));
-        $n = $requete2->fetchColumn();
-
-
-        //Les collaborateurs de chaque projet
-
-        //$requete3 = $pdo->prepare("SELECT COUNT(*), idUser FROM collabraton WHERE idProjet =?");
-
-
-        //$requete3->execute(array($projets['idProjet']));
-
-
-
-
-
-
-
-    }catch (Exception $e){
-        echo ("Une erreur s'est produite");
-    }
-
-}else{
+//    try {
+//
+//
+//
+//
+//
+//
+//
+//        }else{
+//            echo ("Une erreur s'est survenue lors de l'affichage !!");
+//        }
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//    }catch (Exception $e){
+//        echo ("Une erreur s'est produite");
+//    }
+//
+//
+}
+else{
     header('Location: ../auth/connexion.php');
     exit();
 
@@ -155,7 +154,7 @@ if (isset($_SESSION['idUser'])) {
 
         }
 
-        a{
+        .decon{
             display: flex;
             margin-top: 20px;
             color: white;
@@ -168,77 +167,65 @@ if (isset($_SESSION['idUser'])) {
             border: black;
 
         }
+
         .bi {
             color: #00aeff;
         }
 
-        .profil{
+        .colla p{
+            color: black;
+
+        }
+
+
+        .taches{
             width:50%;
             max-width:100vh;
             height: 50%;
             max-height: 80vh;
             margin:auto;
             border-radius:10px;
-            background-color: darkgray;
-            padding-bottom: 50px;
-            align-items: center;
-            display: flex;
-            flex-direction: column;
-
+            padding-left: 10px;
+            border: 2px solid darkgrey;
+            background-color: whitesmoke;
+            font-family: 'Times New Roman', sans-serif;
+            box-shadow: 0 3px 10px rgba(0,1,0,0.2);
 
         }
 
-        .profil h1{
-            padding-bottom:30px ;
+        .taches h1{
+            margin-bottom:30px;
+            margin-top:20px;
             text-align: center;
-            justify-content: center;
-            color: white;
-            font-family: 'Times New Roman';
-            flex-direction: column;
-            align-items: center;
+            color: blue;
             font-weight: bold;
-
+            font-size: 22px;
         }
 
 
 
-        .profil p{
-            text-align: right;
+        .taches-details p{
             padding-top: 10px;
             justify-content: right;
             font-weight: normal;
-            font-family: "Times New Roman", sans-serif;
             color: black;
-
+            font-size: 20px;
         }
 
-
-
-        .profil a{
-            justify-content: center;
-
+        .taches-details .btn{
+            font-weight: bold;
+            font-size: 20px
         }
-
-
-        form a:hover{
-            background-color:darkblue;
-            color:darkorange;
-
-        }
-        /*footer{
-            margin-top: 100px;
-            padding-top:100px;
-        }
-        .mon-footer{
+        .center{
             text-align: center;
+            margin-bottom:20px ;
 
-            font-family: "Times New Roman",sans-serif;
-            color: grey;
-            position: fixed;
-            margin-top: 100px;
+        }
 
 
-        }*/
+
+
+
 
 
 
@@ -254,12 +241,54 @@ if (isset($_SESSION['idUser'])) {
     <div style="padding-bottom: 100px; ">
         <div class="content fixed-top d-flex" >
 
-            <a class="btn btn-success"  href="acceuil.php">Acceuil </a>
+            <a class="btn btn-success"  href="../Dashboard/acceuil.php">Acceuil </a>
 
             <a class="btn btn-success" href="../projets/ajoutProjet.php">New Project</a>
             <a class="btn btn-success" href="../taches/ajoutTaches.php">New Task</a>
             <a class="btn btn-success" href="#">Assigner</a>
 
+            <form style="height: 50px" action="../projets/collaboration.php" method="POST" class="d-flex gap-3 mt-4 g-3">
+                <div>
+                    <?php
+                    //if ($messa)
+                    ?>
+                </div>
+                <label style="color: white; font-weight: bold" for="nom" class="form-label ">Collaboration</label>
+                <select  class="form-select" name="projet" id="projet" required>
+
+
+                    <option class="form-control" value="" disabled selected> Select the Projet</option>
+                    <?php
+                    try {
+
+
+                    $sql = $pdo->prepare("SELECT idProjet, nomProjet FROM Projets WHERE idUser =?");
+
+                    if($sql->execute(array($idUser))){
+                        ?>
+                        <?php
+                        while ($resultats = $sql->fetch())
+                        {
+                            ?>
+
+                            <option class="form-control" value="<?=htmlspecialchars($resultats['idProjet']);?>"> <?php echo(($resultats['nomProjet'])); ?> </option>
+
+                            <?php
+                        } ;
+                    }
+                    }catch (Exception $e){
+                        echo('Erreur '.$e->getMessage());
+                    }
+
+
+
+                    ?>
+                </select>
+
+                <input class="form-control"  type="text" id="nom" name="nom" placeholder="username du collaborateur" required>
+                <button type="submit" class="btn btn-primary " href="#">Collaborer</button>
+
+            </form>
         </div>
 
     </div>
@@ -267,7 +296,7 @@ if (isset($_SESSION['idUser'])) {
     <!-- <h2 style="text-align: center; background-color: #343a40; padding: 0; border-bottom-right-radius: 8px;" class="mb-5 " >Bienvenue sur votre tableau de bord</h2>-->
 
     <div class="d-flex" style="margin:0;">
-
+        <!-- Menu de navigation -->
         <div class="sidebar p-3">
             <h4 class="text-white">Mon Dashboard</h4>
             <ul class="nav flex-column">
@@ -275,20 +304,22 @@ if (isset($_SESSION['idUser'])) {
                     <a class="nav-link active" href="../Dashboard/dash.php"> <i class="bi bi-house-fill"></i> Dashboard</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#"><i class="bi bi-folder"></i> Mes Projets</a>
+                    <a class="nav-link" href="../projets/userProjets.php"><i class="bi bi-folder"></i> Mes Projets</a>
                     <ul class="nav flex-column ms-3">
 
                         <li class="nav-item">
                             <a class="nav-link" href="#"><i class="bi bi-check-circle"></i> Tâches</a>
                         </li>
                         <li class="nav-item">
+
+
                             <a class="nav-link" href="#"><i class="bi bi-people"></i> Membres du Projet</a>
                         </li>
 
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#"><i class="bi bi-person"></i> Mon Compte</a>
+                    <a class="nav-link" href="../auth/userCompte.php"><i class="bi bi-person"></i> Mon Compte</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#"><i class="bi bi-bell"></i> Notifications</a>
@@ -302,37 +333,63 @@ if (isset($_SESSION['idUser'])) {
             </ul>
         </div>
 
+        <div class="taches">
 
-        <div class="profil">
 
             <?php
 
-            if($info) {
+            if(isset($_GET['idTache'])){
+            $idTache = $_GET['idTache'];
 
-//                echo ("<h1 class='titre' >Vous avez créé $n Projet(s)</h1>");
+            //Récupérer les taches sur chaque projet
+            $infotache = $pdo->prepare("SELECT nomTache, dateCreation, dateEcheance, statut, progression, priorite  FROM Taches WHERE idTache = ?");
 
-//                    $requete3 = $pdo->prepare("SELECT COUNT(idUser) AS nbreCollaboration FROM Collaboration WHERE  idProjet =?");
-//                    $requete3->execute(array($projet['idProjet']));
-//
-//                    //$valeurs = $requete3->fetch();
-//                    $valeurs = $requete3->fetch(PDO::FETCH_ASSOC);
+            $infotache->execute(array($idTache));
 
-                    ?>
+            $info = $infotache->fetch(PDO::FETCH_ASSOC);
 
 
-                        <h1>L'information de votre compte </h1>
-                        <p>Nom d'utilisateur : <?php echo ($info['username']); ?> </p>
-                        <p>Email : <?php echo htmlspecialchars($info['email']); ?>  </p>
-                        <p> <?php echo ($info['passwords']); ?>  </p>
-                        <a href=" ../projets/modifierProjet.php?idUser= <?=$info['idUser'];?>" style="color: grey" class="btn btn-warning"> Modifier Profil <i class="fas fa-edit" ></i> </a>
+                if($info)
 
-                    <?php
+                {?>
+                        <div class="taches-details">
+                            <h1>Nom de la tache : <?php echo $info['nomTache'] .' crée le ' ;echo $info['dateCreation'];?> </h1>
 
+                            <p>Priorité de la tache :  <?php echo $info['priorite'] ;?>  </p>
+
+                            <p>Statut de la tache : <?php echo $info['statut'];?>  </p>
+                            <p> Progression : <?php echo $info['progression'];?>  </p>
+                            <span style="color: red; font-weight: bold; font-size: 22px" >Date échéance : <?php echo $info['dateEcheance'];?> </span>
+
+                            <div class="center">
+                                <a  href="#" class="btn btn-outline-primary">Modifier la tâche</a>
+
+                            </div>
+
+
+
+                        </div>
+
+
+
+              <?php
+                }
             }
+
+
             ?>
+
         </div>
 
+
+
+
     </div>
+
+
+
+        </div>
+
 
 
 

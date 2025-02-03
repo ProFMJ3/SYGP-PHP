@@ -173,8 +173,8 @@ if (isset($_SESSION['idUser'])){
             background-color: gray;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-
             height: 100px;
+
         }
 
         .btn-acceuil a ,
@@ -213,6 +213,7 @@ if (isset($_SESSION['idUser'])){
          }
 
         }
+
 
     </style>
 </head>

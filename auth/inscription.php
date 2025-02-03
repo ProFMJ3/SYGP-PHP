@@ -33,10 +33,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['username'], $_POST['em
         $errors[] = "Les mots de passe ne correspondent pas.";
     }
 
-    //hasher le mot de passe
-
     if (empty($errors)) {
-        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
+        $passwordYes = $password;
 
         $sql = "INSERT INTO users (email, username, passwords) VALUES (:email, :username, :password)";
         $stmt = $pdo->prepare($sql);
@@ -44,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['username'], $_POST['em
         $result = $stmt->execute(array(
             'email' => $email,
             'username' => $username,
-            'password' => $hashed_password,
+            'password' => $passwordYes,
         ));
 
         if ($result) {
