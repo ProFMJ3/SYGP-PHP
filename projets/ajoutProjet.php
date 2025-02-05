@@ -1,7 +1,5 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+
 
 include("../auth/config.php");
 session_start();
@@ -12,7 +10,6 @@ if (!isset($_SESSION['idUser'])){
 
 }else{
 
-    echo('<div style="color: green; text-align: center" >'. "Welcome to SYGP!! Vous pouvez créer Votre Projet". '</div>');
 
 
     try {
@@ -103,7 +100,7 @@ if (!isset($_SESSION['idUser'])){
 
         }
 
-        input[type="text"], input[type="date"], input[type="time"], input[type="number"],textarea, select {
+        input[type="text"], input[type="datetime-local"], input[type="number"],textarea, select {
             width: 100%;
             padding: 10px;
             margin-bottom: 10px;
@@ -234,8 +231,8 @@ if (!isset($_SESSION['idUser'])){
         </div>
 
         <div>
-            <label for="dateFin">Date de Fin :</label>
-            <input type="date" id="dateFin" name="dateFin">
+            <label for="dateFin">Date d'échéance :</label>
+            <input type="datetime-local" id="dateFin" name="dateFin">
         </div>
 
         <div class="center">

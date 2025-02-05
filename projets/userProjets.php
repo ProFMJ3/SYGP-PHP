@@ -198,7 +198,7 @@ if (isset($_SESSION['idUser'])) {
             text-align: center;
             justify-content: center;
             color: green;
-            font-family: 'Times New Roman';
+            font-family: 'Times New Roman', sans-serif;
             flex-direction: column;
             align-items: center;
 

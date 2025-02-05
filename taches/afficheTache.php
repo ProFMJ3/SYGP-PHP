@@ -342,7 +342,7 @@ else{
             $idTache = $_GET['idTache'];
 
             //Récupérer les taches sur chaque projet
-            $infotache = $pdo->prepare("SELECT nomTache, dateCreation, dateEcheance, statut, progression, priorite  FROM Taches WHERE idTache = ?");
+            $infotache = $pdo->prepare("SELECT idTache, nomTache, dateCreation, dateEcheance, statut, progression, priorite  FROM Taches WHERE idTache = ?");
 
             $infotache->execute(array($idTache));
 
@@ -358,11 +358,11 @@ else{
                             <p>Priorité de la tache :  <?php echo $info['priorite'] ;?>  </p>
 
                             <p>Statut de la tache : <?php echo $info['statut'];?>  </p>
-                            <p> Progression : <?php echo $info['progression'];?>  </p>
+                            <p> Progression : <?php echo $info['progression'].'%';?>  </p>
                             <span style="color: red; font-weight: bold; font-size: 22px" >Date échéance : <?php echo $info['dateEcheance'];?> </span>
 
                             <div class="center">
-                                <a  href="#" class="btn btn-outline-primary">Modifier la tâche</a>
+                                <a  href="modifierTache.php?idTache=<?= $info['idTache'] ;?>" class="btn btn-outline-primary">Modifier la tâche</a>
 
                             </div>
 

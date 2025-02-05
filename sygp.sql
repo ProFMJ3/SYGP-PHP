@@ -81,6 +81,8 @@ ALTER TABLE projets MODIFY nomProjet VARCHAR(100) UNIQUE;
 ALTER TABLE Taches MODIFY statut ENUM('En cours', 'Terminé') DEFAULT "A faire";
 ALTER TABLE Taches MODIFY priorite  ENUM('Elevée', 'Moyenne', 'Faible') ;
 ALTER TABLE Taches CHANGE dateDebut dateCreation  DATETIME DEFAULT NOW() ;
+ALTER TABLE Taches MODIFY dateEcheance DATETIME DEFAULT NOW() ;
+ALTER TABLE Taches ADD COLUMN dateModification DATETIME NULL ;
 ALTER TABLE Taches ADD COLUMN fichier  VARCHAR(150)  AFTER progression;
 ALTER TABLE Notifications
 ADD COLUMN dateLecture DATETIME;

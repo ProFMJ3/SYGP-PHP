@@ -10,12 +10,13 @@ if (isset($_SESSION['idUser'])){
     if ($_SERVER["REQUEST_METHOD"] == 'POST' && isset($_POST['nom'], $_POST['description'], $_POST['priorite'], $_POST['dateEcheance'],$_POST['projet'])) {
         $nom = htmlspecialchars($_POST['nom']);
         $desc = htmlspecialchars($_POST['description']);
-        $priorite = htmlentities($_POST['priorite']);
+        $priorite = $_POST['priorite'];
         //$statut  = "A Faire";
         $dateEcheance = htmlspecialchars($_POST['dateEcheance']);
         $idProjet = $_POST['projet'];
 
         $message = [];
+
 
         ///if (isset($_POST['add_file']) && $_FILES['file']['error'] ==0) {
         if (isset($_FILES['file'])) {
@@ -26,9 +27,8 @@ if (isset($_SESSION['idUser'])){
 
             if(!in_array($fichier['type'], $type)) {
                 $message[] = "Type de fichiers autorisés sont : png, jpg, jpeg, pdf, docx";
-            }else{
-
-
+            }
+//            else{
 
 
                 //nommer le fichier pour éviter les fichiers de meme noms
@@ -36,48 +36,51 @@ if (isset($_SESSION['idUser'])){
                 $nouveauNom =  uniqid() . "_" . $nomFichierSoumis;
                 $cheminFichier = $dossierTelechargement .$nouveauNom;
 
-                if (!move_uploaded_file($fichier['tmp_name'], $cheminFichier)) {
-                    //$valide =True;
-                    $message[] = "Erreur lors du téléchargement du fichier. Veuillez Télécharger le fichier !!";
+//                if (!move_uploaded_file($fichier['tmp_name'], $cheminFichier)) {
+//                    //$valide =True;
+//                    $message[] = "Erreur lors du téléchargement du fichier. Veuillez Télécharger le fichier !!";
+//                }
+//                }
 
-                }else{
 
 
-                    $sql = $pdo->prepare("INSERT INTO Taches(nomTache, descriptions, dateEcheance, priorite, fichier, idProjet, idUser)VALUES (:nomTache, :descriptions,:dateEcheance, :priorite,:fichier, :idProjet, :idUser)");
-                    $result = $sql->execute(array(
-                        'nomTache'=>$nom,
-                        'descriptions'=>$desc,
-                        'dateEcheance'=>$dateEcheance,
-                        'priorite'=> $priorite,
-                        'fichier'=>$cheminFichier,
-                        'idProjet'=>$idProjet,
-                        'idUser'=>$idUser,
-                    ));
-
-                    if ($result) {
-                        $pro = $pdo->prepare("SELECT nomProjet FROM  Projets WHERE idProjet =?");
-                        $pro->execute(array($idProjet));
-
-                        $nm =$pro ->fetch(PDO::FETCH_ASSOC);
-                        $messageSuccess = "Tâche " . $nom ." a été ajouté avec succès au projet". ' '.$nm['nomProjet'] ;
-                        //header('Location: ../Dashboard/dash.php');
-                    } else {
-                        $message[] = "Erreur SQL : " . implode(" ", $sql->errorInfo());
-                    }
-
-                }
-                }
 
 
         }else{
-            $message[] = "Veuillez remplir tous les champs";
+            $cheminFichier = null;
+        }
 
+        $sql = $pdo->prepare("INSERT INTO Taches(nomTache, descriptions, dateEcheance, priorite, fichier, idProjet, idUser)VALUES (:nomTache, :descriptions,:dateEcheance, :priorite,:fichier, :idProjet, :idUser)");
+        $result = $sql->execute(array(
+            'nomTache'=>$nom,
+            'descriptions'=>$desc,
+            'dateEcheance'=>$dateEcheance,
+            'priorite'=> $priorite,
+            'fichier'=>$cheminFichier,
+            'idProjet'=>$idProjet,
+            'idUser'=>$idUser,
+        ));
+
+        if ($result) {
+            $pro = $pdo->prepare("SELECT nomProjet FROM  Projets WHERE idProjet =?");
+            $pro->execute(array($idProjet));
+
+            $nm =$pro ->fetch(PDO::FETCH_ASSOC);
+            $messageSuccess = "Tâche " . $nom ." a été ajouté avec succès au projet". ' '.$nm['nomProjet'] ;
+            //header('Location: ../Dashboard/dash.php');
+        }else {
+            $message[] = "Erreur SQL : " . implode(" ", $sql->errorInfo());
         }
         // transformer le tableau de message en chaine de caractères
-        $messageErreur = implode('<br>', $message);
 
+
+
+    }else{
+        $message[] = "Veuillez remplir tous les champs";
 
     }
+    $messageErreur = implode('<br>', $message);
+
 }else{
 
     header('Location: ../auth/connexion.php');
@@ -85,6 +88,8 @@ if (isset($_SESSION['idUser'])){
 }
 
 ?>
+
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -127,7 +132,7 @@ if (isset($_SESSION['idUser'])){
 
         }
 
-        input[type="text"], input[type="date"], input[type="time"], input[type="number "], textarea, select {
+        input[type="text"], input[type="datetime-local"], input[type="file"], textarea, select {
             width: 100%;
             padding: 10px;
             margin-bottom: 10px;
@@ -155,6 +160,10 @@ if (isset($_SESSION['idUser'])){
         input[type="submit"]:hover {
             background-color: #0056b3;
         }
+        input:focus, textarea:focus, select:focus{
+            border-color: blue;
+            outline: none;
+        }
 
         p {
             color: red;
@@ -164,6 +173,7 @@ if (isset($_SESSION['idUser'])){
             display: flex;
             justify-content: center;
         }
+
         .btn-cont {
             display: flex;
             justify-content: space-between; /* Place les liens aux extrémités gauche et droite */
@@ -204,6 +214,7 @@ if (isset($_SESSION['idUser'])){
 
 
         }
+
         @keyframes bougermessage {
             from {
 
@@ -215,9 +226,11 @@ if (isset($_SESSION['idUser'])){
         }
 
 
+
     </style>
 </head>
 <body>
+
 <div class="btn-cont">
     <div class="btn-acceuil">
         <a href="../Dashboard/acceuil.php" class="btn btn-primary">Acceuil</a>
@@ -279,12 +292,10 @@ if (isset($_SESSION['idUser'])){
         </div>
         <div>
             
-            <label for="file">Ajoutez un fichier :</label>
-<!--            <input type="checkbox"  id="activer" onclick="ActiverChampFile()" >-->
+            <label for="file">Ajoutez un fichier(Optionnel) :</label>
+            <input type="checkbox"  id="activer" onclick="ActiverChampFile()" >
 
-            <input style="width: 100%;padding: 10px; margin-bottom: 10px;
-                border: 1px solid #ccc;
-                border-radius: 4px;" type="file" name="file" id="file" accept=".jpg, .png,.jpeg, .pdf">
+            <input class="form-control form-control-lg" type="file" name="file" id="file" accept=".jpg, .png,.jpeg, .pdf" disabled >
             
         </div>
             
@@ -293,7 +304,7 @@ if (isset($_SESSION['idUser'])){
 
         <div>
             <label for="dateEcheance">Date d'Echéance :</label>
-            <input type="date" id="dateEcheance" name="dateEcheance" required>
+            <input type="datetime-local" id="dateEcheance" name="dateEcheance" required>
         </div>
 
 
@@ -320,6 +331,7 @@ if (isset($_SESSION['idUser'])){
 <!--            border-radius: 4px;-->
 <!--            font-size: 16px;" type="number" id="progression" name="progression" min="0" max="100" value="0" >-->
 <!--        </div>-->
+
             <?php if (!empty($messageErreur)) : ?>
                 <div style="color: red;"><?= $messageErreur; ?></div>
             <?php endif; ?>
@@ -329,15 +341,16 @@ if (isset($_SESSION['idUser'])){
     </form>
 </div>
 
-<!--<script>-->
-<!--    function ActiverChampFile() {-->
-<!--        let checkbox = document.getElementById("activer");-->
-<!--        let file = document.getElementById("file");-->
-<!---->
-<!--        // Activer/Désactiver le champ fichier-->
-<!--        file.disabled = !checkbox.checked;-->
-<!--    }-->
-<!--</script>-->
+<script>
+    function ActiverChampFile() {
+        let checkbox = document.getElementById("activer");
+        let file = document.getElementById("file");
+
+
+        // Activer/Désactiver le champ fichier
+        file.disabled = !checkbox.checked;
+    }
+</script>
 
 
 </body>

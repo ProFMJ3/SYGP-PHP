@@ -5,56 +5,54 @@ include("../auth/config.php");
 
 session_start();
 if (!isset($_SESSION['idUser'])){
-    //die("Vous devez être connecté pour créer un projet.");
     header('Location: ../auth/connexion.php');
     exit();
 
 }else{
 
-    if (isset($_GET['idProjet'])){
-        $idProjet = $_GET['idProjet'];
-        $recuperation = $pdo->prepare("SELECT nomProjet, descriptions, dateFin, etat FROM Projets WHERE idProjet =?");
-        $recuperation->execute(array($idProjet));
+    if (isset($_GET['idTache'])){
+        $idTache = $_GET['idTache'];
+
+        $recuperation = $pdo->prepare("SELECT nomTache, descriptions, statut, progression FROM Taches WHERE idTache =?");
+        $recuperation->execute(array($idTache));
         $valeurs = $recuperation->fetch();
         if($valeurs){
-            $nom = $valeurs['nomProjet'];
+            $nom = $valeurs['nomTache'];
             $desc = $valeurs['descriptions'];
-            $dateFin = $valeurs['dateFin'];
-            $etat = $valeurs['etat'];
-
+            $staut = $valeurs['statut'];
+            $prog = $valeurs['progression'];
 
         }
-    }
+        echo $idTache;
 
     try {
 
+        if ($_SERVER["REQUEST_METHOD"] == 'POST' && isset($_POST['nom'], $_POST['description'], $_POST['statut'],$_POST['progression'])) {
 
-        if ($_SERVER["REQUEST_METHOD"] == 'POST' && isset($_POST['nom'], $_POST['description'],$_POST['dateFin'])) {
-            $message1 = "";
             $message2 = "";
-            $n = htmlspecialchars($_POST['nom']);
-            $d = htmlspecialchars($_POST['description']);
-            $df = htmlspecialchars($_POST['dateFin']);
+            $nn = htmlspecialchars($_POST['nom']);
+            $nd = htmlspecialchars($_POST['description']);
+            $nstatut = $_POST['statut'];
+            $npro = intval($_POST['progression']);
             $dateModification = date('Y-m-d') . ' ' . date('H:i:s');
 
 
-
-            $sql = $pdo->prepare("UPDATE Projets SET nomProjet=:n, descriptions=:d, dateFin=:df, dateModification =:dm WHERE idProjet =:idProjet");
+            $sql = $pdo->prepare("UPDATE Taches SET nomTache=:nn, descriptions=:nd, statut=:statut, progression=:npro, dateModification=:dm WHERE idTache =:idTache");
             $result = $sql->execute(array(
-                'n'=>$n,
-                'd'=>$d,
-                'df'=>$dateFin,
+                'nn'=>$nn,
+                'nd'=>$nd,
+                //'ndEcheance'=>$ndEcheance,
+                'statut'=>$nstatut,
+                'npro'=>$npro,
                 'dm'=>$dateModification,
-                'idProjet'=>$idProjet,
+                'idTache'=>$idTache,
             ));
 
 
             if ($result) {
-                //$messageSuccess = "Projet a été modifié avec succès";
-
+                //$messageSuccess = "Tâche " . $nn ." a été modifié avec succès au projet";
                 header('Location: ../Dashboard/dash.php');
                 exit();
-
             } else {
                 echo("Une erreur s'est survenu");
             }
@@ -63,11 +61,13 @@ if (!isset($_SESSION['idUser'])){
         }
 
     }catch(Exception $e){
-        $message2 ="Une erreur s'est survenu".$e ->getMessage();
+        $message2 ="Une erreur s'est survenu".$e->getMessage();
 
     }
 
 }
+}
+
 
 ?>
 
@@ -78,8 +78,6 @@ if (!isset($_SESSION['idUser'])){
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-
-    <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
     <title>SYGP</title>
     <style>
 
@@ -97,42 +95,39 @@ if (!isset($_SESSION['idUser'])){
             padding: 20px 30px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
-
         }
 
-        h2 {
+        .container h2 {
             margin-top: 0;
             color: blue;
             text-align: center;
             font-weight: bold;
+
         }
 
         label {
             display: block;
             margin-bottom: 8px;
             color: #555;
-            font-weight: bold;
+            font-weight:bolder;
 
         }
 
-        input[type="text"], input[type="date"], input[type="time"], input[type="number"],textarea, select {
+        input[type="text"], input[type="datetime-local"], input[type="number"], textarea, select {
             width: 100%;
             padding: 10px;
             margin-bottom: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
             font-size: 16px;
-        }
 
+        }
 
         textarea {
             resize: none;
         }
-        form{
 
-        }
-
-        .container input[type="submit"] {
+        input[type="submit"] {
             background-color: #007BFF;
             color: #fff;
             border: none;
@@ -140,29 +135,21 @@ if (!isset($_SESSION['idUser'])){
             font-size: 16px;
             border-radius: 4px;
             cursor: pointer;
-            text-align: center;
-
+            transition: background-color 0.3s;
         }
 
-        .container input[type="submit"]:hover {
+        input[type="submit"]:hover {
             background-color: #0056b3;
-
-
         }
 
         p {
             color: red;
             font-weight: bold;
         }
-
         .center{
             display: flex;
             justify-content: center;
-
-
         }
-
-
         .btn-cont {
             display: flex;
             justify-content: space-between; /* Place les liens aux extrémités gauche et droite */
@@ -172,7 +159,7 @@ if (!isset($_SESSION['idUser'])){
             background-color: gray;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            height: 100px;
+            height: 80px;
 
         }
 
@@ -206,12 +193,13 @@ if (!isset($_SESSION['idUser'])){
         @keyframes bougermessage {
             from {
 
-                left: -150px
-            }to {
-                 left: 150px;
-             }
+            left: -150px
+        }to {
+            left: 150px;
+         }
 
         }
+
 
     </style>
 </head>
@@ -227,52 +215,65 @@ if (!isset($_SESSION['idUser'])){
     <div class="btn-liste">
         <a href="../Dashboard/dash.php" class="btn btn-primary">Dashborad</a>
     </div>
+
 </div>
 
 <div class="container">
+    <h2> Nouvelle Tâche</h2>
 
-    <h2> Modification du Projet</h2>
-    <a class="btn btn-primary" href="../Dashboard/dash.php">Dashboard</a>
-    <form action="" method="POST">
+
+    <form action="" method="POST" enctype="multipart/form-data" >
 
         <div>
-            <label for="nom">Nom du projet :</label>
-            <input type="text" id="nom" name="nom" value="<?= $nom;?>" placeholder="Ex: Application de gestion étudiants" required>
+            <label for="nom">Nom de la Tâche :</label>
+            <input type="text" id="nom" name="nom" value="<?= $nom;?>" required>
         </div>
         <div>
             <label for="description">Description :</label>
-            <textarea id="description" name="description" rows="6" cols="60" placeholder="Décrire un peu votre projet ici..." required><?php echo $desc;?> </textarea><br>
+            <textarea id="description" name="description"  rows="4" cols="40" required placeholder="Tapez votre message ici..."><?php echo $desc; ?> </textarea><br>
 
         </div>
+            <div>
+                <label for="statut">Statut :</label>
+                <select name="statut" id="statut">
+
+                    <option value="En cours "<?= $staut == 'A faire' ?'selected':''; ?>>A faire</option>
+                    <option value="En cours "<?= $staut == 'En cours' ?'selected':''; ?>>En cours</option>
+                    <option value="En cours "<?= $staut == 'Terminé' ?'selected':''; ?>>Terminé</option>
+                </select>
+            </div>
+
         <div>
 
-            <select name="etat" id="etat">
-                <option value="En cours" <?= $etat == 'En cours' ?:''; ?> >En cours</option>
-                <option value="Terminé "  >Terminé</option>
-<!--                --><?php //= $etat == 'Terminé' ?:''; ?>
-            </select>
+            <label for="file">Ajoutez un fichier :</label>
+            <input type="checkbox"  id="activer" onclick="ActiverChampFile()" >
+
+            <input style="width: 100%;padding: 10px; margin-bottom: 10px;
+                border: 1px solid #ccc;
+                border-radius: 4px;" type="file" name="file" id="file" accept=".jpg, .png,.jpeg, .pdf" disabled>
+
         </div>
+
+
+
 
 
         <div>
-            <label for="dateFin">Date de Fin :</label>
-            <input type="date" id="dateFin" value="<?= $dateFin;?>" name="dateFin">
+            <label for="progression">Progression :</label>
+            <input type="number" id="progression"  value="<?= $prog;?>" name="progression" min="0" max="100" >
         </div>
-
-
+            <?php if (!empty($messageErreur)) : ?>
+                <div style="color: red;"><?= $messageErreur; ?></div>
+            <?php endif; ?>
         <div class="center">
-            <input  type="submit" value="Sauvegarder">
+            <input type="submit" value="Ajouter">
         </div>
-        <?php if (!empty($message2)) : ?>
-            <div style="color: red;"><?= $message2; ?></div>
-        <?php endif; ?>
     </form>
 </div>
 
 
-
-
-
-
 </body>
+
+
+
 </html>
