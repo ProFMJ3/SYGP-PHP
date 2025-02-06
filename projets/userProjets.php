@@ -494,7 +494,7 @@ if (isset($_SESSION['idUser'])) {
                         </div>
 
 
-                        <a href=" ../projets/modifierProjet.php?idProjet= <?=$projet['idProjet'];?>" class="btn1 btn btn-success"> <i class="fas fa-edit" ></i>Modifier le projet </a>
+                        <a href="../projets/modifierProjet.php?idProjet= <?=$projet['idProjet'];?>" class="btn1 btn btn-success"> <i class="fas fa-edit" ></i>Modifier le projet </a>
                     </div>
 
                     <?php

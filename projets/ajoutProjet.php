@@ -1,7 +1,11 @@
 <?php
 
 
-include("../auth/config.php");
+//include("../auth/config.php");
+include_once("../auth/ConfigClass.php");
+$pdo = ConfigClass::pdo();
+
+include_once("../projets/ProjetClass.php");
 session_start();
 if (!isset($_SESSION['idUser'])){
     //die("Vous devez être connecté pour créer un projet.");
@@ -23,17 +27,30 @@ if (!isset($_SESSION['idUser'])){
             $dateFin = htmlspecialchars($_POST['dateFin']);
             $idUser = $_SESSION['idUser'];
 
+            //Controle
 
-            $sql = $pdo->prepare('INSERT INTO Projets(nomProjet, descriptions, dateFin, idUser)VALUES (:nomProjet, :descriptions, :dateFin, :idUser)');
-            $result = $sql->execute(array(
-                    'nomProjet'=>$nom,
-                    'descriptions'=>$desc,
-                    'dateFin'=>$dateFin,
-                    'idUser'=>$idUser,
-            ));
+            $verification = $pdo->prepare("SELECT idProjet FROM Projets WHERE nomProjet = ?");
+            $verification->execute(array($nom));
+
+            $nomTrouve= $verification->fetch();
+        if ($nomTrouve){
+            $errors[] = "Vous avez déja utilisé ce nom de projet !!";
+        }
 
 
-            if ($result) {
+
+//            $sql = $pdo->prepare('INSERT INTO Projets(nomProjet, descriptions, dateFin, idUser)VALUES (:nomProjet, :descriptions, :dateFin, :idUser)');
+//            $result = $sql->execute(array(
+//                    'nomProjet'=>$nom,
+//                    'descriptions'=>$desc,
+//                    'dateFin'=>$dateFin,
+//                    'idUser'=>$idUser,
+//            ));
+            $projet = new ProjetClass(null, $nom, $desc, $dateFin, null, $idUser, null);
+            $projet->nouveauProjet();
+
+
+            if ($projet) {
                 $messageSuccess = "Projet est ajouté avec succès";
                 //header('Location: ../Dashboard/dash.php');
                 //exit();

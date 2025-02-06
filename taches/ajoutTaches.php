@@ -1,6 +1,13 @@
 <?php
 session_start();
-include("../auth/config.php");
+
+//include("../auth/config.php");
+$message = [];
+$messageErreur="";
+include_once("../auth/ConfigClass.php");
+$pdo = ConfigClass::pdo();
+include_once("TachesClass.php");
+
 if (isset($_SESSION['idUser'])){
     $idUser = $_SESSION['idUser'];
 //    header('Location: ../auth/connexion.php');
@@ -15,7 +22,7 @@ if (isset($_SESSION['idUser'])){
         $dateEcheance = htmlspecialchars($_POST['dateEcheance']);
         $idProjet = $_POST['projet'];
 
-        $message = [];
+
 
 
         ///if (isset($_POST['add_file']) && $_FILES['file']['error'] ==0) {
@@ -43,43 +50,46 @@ if (isset($_SESSION['idUser'])){
 //                }
 
 
-
-
-
         }else{
             $cheminFichier = null;
         }
 
-        $sql = $pdo->prepare("INSERT INTO Taches(nomTache, descriptions, dateEcheance, priorite, fichier, idProjet, idUser)VALUES (:nomTache, :descriptions,:dateEcheance, :priorite,:fichier, :idProjet, :idUser)");
-        $result = $sql->execute(array(
-            'nomTache'=>$nom,
-            'descriptions'=>$desc,
-            'dateEcheance'=>$dateEcheance,
-            'priorite'=> $priorite,
-            'fichier'=>$cheminFichier,
-            'idProjet'=>$idProjet,
-            'idUser'=>$idUser,
-        ));
+//        $sql = $pdo->prepare("INSERT INTO Taches(nomTache, descriptions, dateEcheance, priorite, fichier, idProjet, idUser)VALUES (:nomTache, :descriptions,:dateEcheance, :priorite,:fichier, :idProjet, :idUser)");
+//        $result = $sql->execute(array(
+//            'nomTache'=>$nom,
+//            'descriptions'=>$desc,
+//            'dateEcheance'=>$dateEcheance,
+//            'priorite'=> $priorite,
+//            'fichier'=>$cheminFichier,
+//            'idProjet'=>$idProjet,
+//            'idUser'=>$idUser,
+//        ));
 
-        if ($result) {
-            $pro = $pdo->prepare("SELECT nomProjet FROM  Projets WHERE idProjet =?");
-            $pro->execute(array($idProjet));
+        if(empty($message)){
 
-            $nm =$pro ->fetch(PDO::FETCH_ASSOC);
-            $messageSuccess = "Tâche " . $nom ." a été ajouté avec succès au projet". ' '.$nm['nomProjet'] ;
-            //header('Location: ../Dashboard/dash.php');
+
+            $tache = new TachesClass(null, $nom, $desc, $dateEcheance, $priorite, null, null,null, $cheminFichier, $idProjet, $idUser);
+            $tache->nouveauTache();
+
+            if ($tache) {
+                $pro = $pdo->prepare("SELECT nomProjet FROM  Projets WHERE idProjet =?");
+                $pro->execute(array($idProjet));
+
+                $nm =$pro ->fetch(PDO::FETCH_ASSOC);
+                $messageSuccess = "Tâche ' " . $nom ." ' a été ajouté avec succès au projet". ' '.$nm['nomProjet'] ;
+                //header('Location: ../Dashboard/dash.php');
+            }else {
+
+                $message[]= "Erreur lors de l'ajout";
+            }
+
         }else {
-            $message[] = "Erreur SQL : " . implode(" ", $sql->errorInfo());
+
+            $messageErreur = implode('<br>', $message);
         }
-        // transformer le tableau de message en chaine de caractères
 
-
-
-    }else{
-        $message[] = "Veuillez remplir tous les champs";
 
     }
-    $messageErreur = implode('<br>', $message);
 
 }else{
 

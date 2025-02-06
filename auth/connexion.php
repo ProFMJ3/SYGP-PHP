@@ -1,6 +1,8 @@
 <?php
 
-include("config.php");
+//include("config.php");
+include_once("../auth/ConfigClass.php");
+$pdo = ConfigClass::pdo();
 session_start();
 
 $message = '';

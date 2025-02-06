@@ -1,7 +1,11 @@
 <?php
 
 
-include("../auth/config.php");
+//include("../auth/config.php");
+
+include_once("../auth/ConfigClass.php");
+$pdo = ConfigClass::pdo();
+include_once("TachesClass.php");
 
 session_start();
 if (!isset($_SESSION['idUser'])){
@@ -23,7 +27,7 @@ if (!isset($_SESSION['idUser'])){
             $prog = $valeurs['progression'];
 
         }
-        echo $idTache;
+
 
     try {
 
@@ -36,22 +40,24 @@ if (!isset($_SESSION['idUser'])){
             $npro = intval($_POST['progression']);
             $dateModification = date('Y-m-d') . ' ' . date('H:i:s');
 
+//
+//            $sql = $pdo->prepare("UPDATE Taches SET nomTache=:nn, descriptions=:nd, statut=:nstatut, progression=:npro, dateModification=:dm WHERE idTache =:idTache");
+//            $result = $sql->execute(array(
+//                'nn'=>$nn,
+//                'nd'=>$nd,
+//                //'ndEcheance'=>$ndEcheance,
+//                'nstatut'=>$nstatut,
+//                'npro'=>$npro,
+//                'dm'=>$dateModification,
+//                'idTache'=>$idTache,
+//            ));
+            $tacheModification = new TachesClass($idTache, $nn, $nd,  null, null, $nstatut, $npro, null, null, null, $dateModification);
+            $tacheModification->editerTache();
 
-            $sql = $pdo->prepare("UPDATE Taches SET nomTache=:nn, descriptions=:nd, statut=:statut, progression=:npro, dateModification=:dm WHERE idTache =:idTache");
-            $result = $sql->execute(array(
-                'nn'=>$nn,
-                'nd'=>$nd,
-                //'ndEcheance'=>$ndEcheance,
-                'statut'=>$nstatut,
-                'npro'=>$npro,
-                'dm'=>$dateModification,
-                'idTache'=>$idTache,
-            ));
 
-
-            if ($result) {
-                //$messageSuccess = "Tâche " . $nn ." a été modifié avec succès au projet";
-                header('Location: ../Dashboard/dash.php');
+            if ($tacheModification) {
+                //$messageSuccess = "Tâche " . $nn ." a été modifié avec succès au projet"
+                header('Location: ../projets/userProjets.php');
                 exit();
             } else {
                 echo("Une erreur s'est survenu");
@@ -204,6 +210,7 @@ if (!isset($_SESSION['idUser'])){
     </style>
 </head>
 <body>
+
 <div class="btn-cont">
     <div class="btn-acceuil">
         <a href="../Dashboard/acceuil.php" class="btn btn-primary">Acceuil</a>
@@ -219,7 +226,7 @@ if (!isset($_SESSION['idUser'])){
 </div>
 
 <div class="container">
-    <h2> Nouvelle Tâche</h2>
+    <h2>Modification Tâche</h2>
 
 
     <form action="" method="POST" enctype="multipart/form-data" >
@@ -237,9 +244,9 @@ if (!isset($_SESSION['idUser'])){
                 <label for="statut">Statut :</label>
                 <select name="statut" id="statut">
 
-                    <option value="En cours "<?= $staut == 'A faire' ?'selected':''; ?>>A faire</option>
+                    <option value="A faire "<?= $staut == 'A faire' ?'selected':''; ?>>A faire</option>
                     <option value="En cours "<?= $staut == 'En cours' ?'selected':''; ?>>En cours</option>
-                    <option value="En cours "<?= $staut == 'Terminé' ?'selected':''; ?>>Terminé</option>
+                    <option value="Terminé" "<?= $staut == 'Terminé' ?'selected':''; ?>>Terminé</option>
                 </select>
             </div>
 
@@ -256,12 +263,11 @@ if (!isset($_SESSION['idUser'])){
 
 
 
-
-
         <div>
             <label for="progression">Progression :</label>
             <input type="number" id="progression"  value="<?= $prog;?>" name="progression" min="0" max="100" >
         </div>
+
             <?php if (!empty($messageErreur)) : ?>
                 <div style="color: red;"><?= $messageErreur; ?></div>
             <?php endif; ?>

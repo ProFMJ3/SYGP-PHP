@@ -12,10 +12,10 @@ if (isset($_SESSION['idUser'])) {
 
     try {
         //Récupérer les projets de chaque utilisateur
-        $profil = $pdo->prepare("SELECT idUser, username, email, passwords, dateInscription FROM Users WHERE idUser = ?");
+        $profil = $pdo->prepare("SELECT * FROM Users WHERE idUser = ?");
         $profil->execute(array($idUser));
 
-        $info= $profil->fetch(PDO::FETCH_ASSOC);
+        $results= $profil->fetch(PDO::FETCH_ASSOC);
 
         //Avoir le nombre de projets crée par chaque user
         $requete2 = $pdo->prepare("SELECT COUNT(*) FROM projets WHERE idUser = ?");
@@ -284,7 +284,7 @@ if (isset($_SESSION['idUser'])) {
 
             <?php
 
-            if($info) {
+            if($results) {
 
 
 
@@ -300,13 +300,14 @@ if (isset($_SESSION['idUser'])) {
                         <div class="profil-details" >
                             <p> <strong>Projets créés :</strong>  <?php echo $n; ?></p>
                             <p> <strong>Collaborations :</strong> <?php echo $nC; ?> projet(s) </p>
-                            <p><strong>Date d'inscription :</strong> <?php echo ($info['dateInscription']); ?> </p>
-                            <p><strong>Nom d'utilisateur :</strong><?php echo ($info['username']); ?> </p>
-                            <p><strong>Email :</strong> <?php echo htmlspecialchars($info['email']); ?>  </p>
-                            <p><strong>Mot de passe :</strong>  <?php echo str_repeat('*',strlen($info['passwords'])); ?>  </p>
+                            <p><strong>Date d'inscription :</strong> <?php echo ($results['dateInscription']); ?> </p>
+                            <p><strong>Nom d'utilisateur :</strong><?php echo ($results['username']); ?> </p>
+                            <p><strong>Email :</strong> <?php echo htmlspecialchars($results['email']); ?>  </p>
+                            <p><strong>Mot de passe :</strong>  <?php echo str_repeat('*',strlen($results['passwords'])); ?>  </p>
 
                             <div class="center" >
-                                <a href=" ../projets/modifierProjet.php?idUser= <?=$info['idUser'];?>" style="color: white" class="btn btn-success"> Modifier Profil <i class="fas fa-edit" ></i> </a>
+<!--                                <a href="#" style="color: white" class="btn btn-success"> Modifier Profil <i class="fas fa-edit" ></i> </a>-->
+                                <a  href="modifierCompte.php?idUser=<?= $results['idUser'] ;?>" class="btn btn-success"><i class="fas fa-edit" ></i> Modifier profil</a>
 
                             </div>
 

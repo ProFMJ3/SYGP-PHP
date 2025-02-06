@@ -245,6 +245,7 @@ if (isset($_SESSION['idUser'])) {
 
 
         .projets{
+
             text-align: center;
             border-radius: 10px;
             background-color: lightgray;
@@ -261,6 +262,7 @@ if (isset($_SESSION['idUser'])) {
             display: flex;
             gap: 10px;
             margin-left: 20px;
+            margin-top: 15px;
 
         }
 
@@ -385,6 +387,7 @@ if (isset($_SESSION['idUser'])) {
                 </div>
 
                 <div class="projets">
+                    <h2 style="color: #0a53be" >Votre Calendrier</h2>
 
                     <?php
 
@@ -395,7 +398,7 @@ if (isset($_SESSION['idUser'])) {
 
                             ?>
                             <div class="projet-every" >
-                                <h4><?php echo ($projet['nomProjet']); ?> </h4>
+                                <p style="color: black; font-size: 20px;" ><?php echo ($projet['nomProjet']); ?> : </p>
                                 <p style="color: red; font-weight: bold"> DEADLINE : <?php echo htmlspecialchars($projet['dateFin']); ?>  </p>
                             </div>
 

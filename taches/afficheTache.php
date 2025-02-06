@@ -363,6 +363,7 @@ else{
 
                             <div class="center">
                                 <a  href="modifierTache.php?idTache=<?= $info['idTache'] ;?>" class="btn btn-outline-primary">Modifier la tâche</a>
+                                <a  href="assignation.php?idTache=<?= $info['idTache'] ;?>" class="btn btn-primary">Assigner</a>
 
                             </div>
 

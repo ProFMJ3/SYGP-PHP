@@ -1,7 +1,10 @@
 <?php
 
 
-include("../auth/config.php");
+//include("../auth/config.php");
+include("../auth/ConfigClass.php");
+include_once ("ProjetClass.php");
+$pdo = ConfigClass::pdo();
 
 session_start();
 if (!isset($_SESSION['idUser'])){
@@ -24,7 +27,7 @@ if (!isset($_SESSION['idUser'])){
 
 
         }
-    }
+
 
     try {
 
@@ -39,20 +42,23 @@ if (!isset($_SESSION['idUser'])){
 
 
 
-            $sql = $pdo->prepare("UPDATE Projets SET nomProjet=:n, descriptions=:d, dateFin=:df, dateModification =:dm WHERE idProjet =:idProjet");
-            $result = $sql->execute(array(
-                'n'=>$n,
-                'd'=>$d,
-                'df'=>$dateFin,
-                'dm'=>$dateModification,
-                'idProjet'=>$idProjet,
-            ));
+//            $sql = $pdo->prepare("UPDATE Projets SET nomProjet=:n, descriptions=:d, dateFin=:df, dateModification =:dm WHERE idProjet =:idProjet");
+//            $result = $sql->execute(array(
+//                'n'=>$n,
+//                'd'=>$d,
+//                'df'=>$dateFin,
+//                'dm'=>$dateModification,
+//                'idProjet'=>$idProjet,
+//            ));
+
+            $projetModification = new ProjetClass($idProjet, $n, $d, $df, $dateModification, null, $etat);
+            $projetModification->editerProjet();
 
 
-            if ($result) {
+            if ($projetModification) {
                 //$messageSuccess = "Projet a été modifié avec succès";
 
-                header('Location: ../Dashboard/dash.php');
+                header('Location: userProjets.php');
                 exit();
 
             } else {
@@ -62,9 +68,10 @@ if (!isset($_SESSION['idUser'])){
 
         }
 
-    }catch(Exception $e){
-        $message2 ="Une erreur s'est survenu".$e ->getMessage();
+        }catch(Exception $e){
+            $message2 ="Une erreur s'est survenu".$e ->getMessage();
 
+        }
     }
 
 }

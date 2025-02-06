@@ -3,6 +3,7 @@
 include("config.php");
 
 $message = "";
+$errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['username'], $_POST['email'], $_POST['password'], $_POST['passwordConfirm'])) {
     $username = trim($_POST['username']);
@@ -10,8 +11,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['username'], $_POST['em
     $password = $_POST['password'];
     $passwordConfirm = $_POST['passwordConfirm'];
 
-    //un tableau pour recceuillir les erreurs et
-    $errors = [];
+
+
+    $verificationUsername = $pdo->prepare("SELECT * FROM Users WHERE username =?");
+    $verificationUsername->execute(array($username));
+    $trouverUsername =$verificationUsername->fetch();
+    if ($trouverUsername){
+        $errors[] = "Ce nom utilisateur existe déja";
+    }
+
+    $verificationEmail = $pdo->prepare("SELECT idUser FROM Users WHERE  email =?");
+    $verificationEmail->execute(array($email));
+    $trouverEmail = $verificationEmail->fetch();
+
+    if ($trouverEmail){
+        $errors[] = "Cette adresse email déja utilisé par un autre compte";
+    }
 
     // Validation de l'email
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -33,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['username'], $_POST['em
         $errors[] = "Les mots de passe ne correspondent pas.";
     }
 
-    if (empty($errors)) {
+    if (empty($errors)){
 
         $passwordYes = $password;
 
@@ -47,16 +62,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['username'], $_POST['em
         ));
 
         if ($result) {
-            $message = 'Inscription réussie!';
+
             header('Location: connexion.php');
             exit();
         } else {
-            $message = 'Erreur lors de l\'inscription.';
+            $errors[] = "Erreur lors de l'inscription.";
         }
-    } else {
+    }else{
         $message = implode('<br>', $errors);
     }
+
+
 }
+
 ?>
 
 
@@ -104,6 +122,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['username'], $_POST['em
             display: flex;
             flex-direction: column;
             color: green;
+            font-family: "Times New Roman", sans-serif;
         }
         /*form{
             background-color: white;
@@ -122,7 +141,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['username'], $_POST['em
         }
         input::placeholder{
             font-weight: lighter;
-            font-family: "Times New Roman";
+            font-family: "Times New Roman", sans-serif;
             color: gray;
         }
         button{
