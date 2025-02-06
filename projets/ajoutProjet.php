@@ -20,19 +20,19 @@ if (!isset($_SESSION['idUser'])){
 
 
     if ($_SERVER["REQUEST_METHOD"] == 'POST' && isset($_POST['nom'], $_POST['description'],$_POST['dateFin'])) {
-            $message1 = "";
-            $message2 = "";
-            $nom = htmlspecialchars($_POST['nom']);
-            $desc = htmlspecialchars($_POST['description']);
-            $dateFin = htmlspecialchars($_POST['dateFin']);
-            $idUser = $_SESSION['idUser'];
+        $message1 = "";
+        $message2 = "";
+        $nom = htmlspecialchars($_POST['nom']);
+        $desc = htmlspecialchars($_POST['description']);
+        $dateFin = htmlspecialchars($_POST['dateFin']);
+        $idUser = $_SESSION['idUser'];
 
             //Controle
 
-            $verification = $pdo->prepare("SELECT idProjet FROM Projets WHERE nomProjet = ?");
-            $verification->execute(array($nom));
+        $verification = $pdo->prepare("SELECT idProjet FROM Projets WHERE nomProjet = ? AND idUser!=?");
+        $verification->execute(array($nom, $idUser));
 
-            $nomTrouve= $verification->fetch();
+        $nomTrouve= $verification->fetch();
         if ($nomTrouve){
             $errors[] = "Vous avez déja utilisé ce nom de projet !!";
         }
@@ -46,6 +46,7 @@ if (!isset($_SESSION['idUser'])){
 //                    'dateFin'=>$dateFin,
 //                    'idUser'=>$idUser,
 //            ));
+
             $projet = new ProjetClass(null, $nom, $desc, $dateFin, null, $idUser, null);
             $projet->nouveauProjet();
 
