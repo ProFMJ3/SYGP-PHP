@@ -2,11 +2,13 @@
 <?php
 
 session_start();
+include_once("../auth/ConfigClass.php");
+$pdo = ConfigClass::pdo();
 
  //Vérifier si l'utilisateur est connecté
 if (isset($_SESSION['idUser'])) {
 
-    include('../auth/config.php');
+    //include('../auth/config.php');
     //Récupérer l'ID
     $idUser = $_SESSION['idUser'];
 
@@ -137,12 +139,9 @@ if (isset($_SESSION['idUser'])) {
             border-bottom-right-radius: 10px;
             min-width: 15%;
 
-
-
-
-
-
         }
+
+
         .sidebar a {
             color: white;
             text-decoration: none;
@@ -263,6 +262,17 @@ if (isset($_SESSION['idUser'])) {
             gap: 10px;
             margin-left: 20px;
             margin-top: 15px;
+        }
+
+        .projet-every .btn1{
+            height: 20px;
+            font-size: 18px;
+            align-content: center;
+            align-items: center;
+            text-align: center;
+            justify-content: center;
+            text-decoration: none;
+
 
         }
 
@@ -333,7 +343,7 @@ if (isset($_SESSION['idUser'])) {
                         <ul class="nav flex-column ms-3">
 
                             <li class="nav-item">
-                                <a class="nav-link" href="#"><i class="bi bi-check-circle"></i> Tâches</a>
+                                <a class="nav-link" href="../projets/userCollaboration.php"><i class="bi bi-check-circle"></i>Mes collaborations</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="#"><i class="bi bi-people"></i> Membres du Projet</a>
@@ -382,6 +392,7 @@ if (isset($_SESSION['idUser'])) {
                         <h1>Projet terminé</h1>
                         <p> Total : <?php echo $nprojetTermine ;?> </p>
 
+
                     </div>
 
                 </div>
@@ -400,10 +411,11 @@ if (isset($_SESSION['idUser'])) {
                             <div class="projet-every" >
                                 <p style="color: black; font-size: 20px;" ><?php echo ($projet['nomProjet']); ?> : </p>
                                 <p style="color: red; font-weight: bold"> DEADLINE : <?php echo htmlspecialchars($projet['dateFin']); ?>  </p>
+                                <a href=" ../projets/afficheProjet.php?idProjet= <?=$projet['idProjet'];?>" class="btn1" > Plus </a>
+
                             </div>
 
 
-<!--                                <a href=" ../projets/modifierProjet.php?idProjet= --><?php //=$projet['idProjet'];?><!--" class="btn1 btn btn-success"> Plus </a>-->
 
 
                             <?php

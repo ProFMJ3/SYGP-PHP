@@ -52,7 +52,7 @@ if (!isset($_SESSION['idUser'])){
 
 
             if ($projet) {
-                $messageSuccess = "Projet est ajouté avec succès";
+                $messageSuccess = $nom . " est créé avec succès";
                 //header('Location: ../Dashboard/dash.php');
                 //exit();
             } else {
@@ -118,7 +118,7 @@ if (!isset($_SESSION['idUser'])){
 
         }
 
-        input[type="text"], input[type="datetime-local"], input[type="number"],textarea, select {
+        input[type="text"], input[type="date"], input[type="number"],textarea, select {
             width: 100%;
             padding: 10px;
             margin-bottom: 10px;
@@ -249,8 +249,8 @@ if (!isset($_SESSION['idUser'])){
         </div>
 
         <div>
-            <label for="dateFin">Date d'échéance :</label>
-            <input type="datetime-local" id="dateFin" name="dateFin">
+            <label for="dateFin">Date Fin de projet :</label>
+            <input type="date" id="dateFin" name="dateFin">
         </div>
 
         <div class="center">

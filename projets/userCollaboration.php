@@ -1,16 +1,20 @@
 
 <?php
 
-session_start();
+
 //include('../auth/config.php');
 include_once("../auth/ConfigClass.php");
 $pdo = ConfigClass::pdo();
+
+include_once("../projets/ProjetClass.php");
+session_start();
 
 //Vérifier si l'utilisateur est connecté
 if(isset($_SESSION['idUser'])) {
 
 
     $idUser = $_SESSION['idUser'];
+
 
 //    try {
 //
@@ -20,15 +24,12 @@ if(isset($_SESSION['idUser'])) {
 //
 //
 //
-//        }else{
-//            echo ("Une erreur s'est survenue lors de l'affichage !!");
-//        }
+//        $collaboration = $pdo->prepare("SELECT CONVERT(idProjet) AS nbreCollaboration FROM Collaboration WHERE idUser =?");
+//        $collaboration->execute(array($idUser));
+//        $nC = $collaboration->fetchColumn();
 //
 //
-//
-//
-//
-//
+//        //Récupérer les collaborateurs sur chaque projet
 //
 //
 //
@@ -38,8 +39,8 @@ if(isset($_SESSION['idUser'])) {
 //    }catch (Exception $e){
 //        echo ("Une erreur s'est produite");
 //    }
-//
-//
+
+
 }
 else{
     header('Location: ../auth/connexion.php');
@@ -139,6 +140,7 @@ else{
         .sidebar a {
             color: white;
             text-decoration: none;
+
         }
         .sidebar a:hover {
             background-color: #495057; /* Couleur au survol */
@@ -185,15 +187,12 @@ else{
 
         .colla p{
             color: black;
-
         }
 
-
-        .taches{
-            width:50%;
+        .projet{
+            width:100%;
             max-width:100vh;
             height: 50%;
-            max-height: 80vh;
             margin:auto;
             border-radius:10px;
             padding-left: 10px;
@@ -201,10 +200,12 @@ else{
             background-color: whitesmoke;
             font-family: 'Times New Roman', sans-serif;
             box-shadow: 0 3px 10px rgba(0,1,0,0.2);
+            margin-bottom: 50px;
+
 
         }
 
-        .taches h1{
+        .projet h1{
             margin-bottom:30px;
             margin-top:20px;
             text-align: center;
@@ -214,8 +215,7 @@ else{
         }
 
 
-
-        .taches-details p{
+        .projet-details p{
             padding-top: 10px;
             justify-content: right;
             font-weight: normal;
@@ -223,14 +223,60 @@ else{
             font-size: 20px;
         }
 
-        .taches-details .btn{
+        .projet-details .btn{
             font-weight: bold;
             font-size: 20px
         }
         .center{
+            display: flex;
             text-align: center;
             margin-bottom:20px ;
 
+        }
+
+
+        .div-taches{
+            flex-direction: column;
+        }
+
+        .taches{
+            display: flex;
+            flex-direction: column;
+            gap:10px;
+
+        }
+        
+        
+        .taches p{
+            align-items: center;
+            text-align: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+            display: flex;
+
+        }
+
+        .taches  .btn-primary {
+            height: 20px;
+            font-size: 18px;
+            align-content: center;
+            align-items: center;
+
+        }
+
+
+
+        .div-taches h4{
+            margin-top: 20px;
+            text-align: center;
+            color: #0dcaf0;
+        }
+        .div-taches a {
+            text-decoration: none;
+        }
+        .div-taches p{
+            gap:10px;
         }
 
 
@@ -273,20 +319,20 @@ else{
                     try {
 
 
-                    $sql = $pdo->prepare("SELECT idProjet, nomProjet FROM Projets WHERE idUser =?");
+                        $sql = $pdo->prepare("SELECT idProjet, nomProjet FROM Projets WHERE idUser =?");
 
-                    if($sql->execute(array($idUser))){
-                        ?>
-                        <?php
-                        while ($resultats = $sql->fetch())
-                        {
+                        if($sql->execute(array($idUser))){
                             ?>
-
-                            <option class="form-control" value="<?=htmlspecialchars($resultats['idProjet']);?>"> <?php echo(($resultats['nomProjet'])); ?> </option>
-
                             <?php
-                        } ;
-                    }
+                            while ($resultats = $sql->fetch())
+                            {
+                                ?>
+
+                                <option class="form-control" value="<?=htmlspecialchars($resultats['idProjet']);?>"> <?php echo(($resultats['nomProjet'])); ?> </option>
+
+                                <?php
+                            } ;
+                        }
                     }catch (Exception $e){
                         echo('Erreur '.$e->getMessage());
                     }
@@ -315,11 +361,11 @@ else{
                     <a class="nav-link active" href="../Dashboard/dash.php"> <i class="bi bi-house-fill"></i> Dashboard</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="../projets/userProjets.php"><i class="bi bi-folder"></i> Mes Projets</a>
+                    <a class="nav-link" href="userProjets.php"><i class="bi bi-folder"></i>Mes Projets</a>
                     <ul class="nav flex-column ms-3">
 
                         <li class="nav-item">
-                            <a class="nav-link" href="../projets/userCollaboration.php"><i class="bi bi-check-circle"></i> Mes Collaborations</a>
+                            <a class="nav-link" href="#"><i class="bi bi-check-circle"></i>Mes collaborations</a>
                         </li>
                         <li class="nav-item">
 
@@ -344,48 +390,76 @@ else{
             </ul>
         </div>
 
-        <div class="taches">
+        <div class="projet">
 
 
             <?php
+            $projetColla = $pdo->prepare("SELECT  Projets.idProjet, Projets.nomProjet, Projets.descriptions,Projets.etat, Projets.dateCreation, Projets.dateFin, Collaboration.dateCollaboration  FROM Collaboration  INNER JOIN Projets ON Collaboration.idProjet =  Projets.idProjet WHERE Collaboration.idUser = ?");
 
-            if(isset($_GET['idTache'])){
-            $idTache = $_GET['idTache'];
-
-            //Récupérer les taches sur chaque projet
-            $infotache = $pdo->prepare("SELECT idTache, nomTache, dateCreation, dateEcheance, statut, progression, priorite  FROM Taches WHERE idTache = ?");
-
-            $infotache->execute(array($idTache));
-
-            $info = $infotache->fetch(PDO::FETCH_ASSOC);
+            $projetColla->execute(array($idUser));
 
 
-                if($info)
+            $collaborations = $projetColla->fetchAll(PDO::FETCH_ASSOC);
 
-                {?>
-                        <div class="taches-details">
-                            <h1>Nom de la tache : <?php echo $info['nomTache'] .' crée le ' ;echo $info['dateCreation'];?> </h1>
+            if($collaborations){
+                foreach ($collaborations as $collaboration)
+                {   $sqlC = $pdo->prepare("SELECT Users.username FROM Projets LEFT JOIN Users ON Projets.idUser = Users.idUser WHERE Projets.idProjet =?");
+                    $sqlC->execute(array($collaboration['idProjet']));
+                    $chef = $sqlC->fetch();
 
-                            <p>Priorité de la tache :  <?php echo $info['priorite'] ;?>  </p>
 
-                            <p>Statut de la tache : <?php echo $info['statut'];?>  </p>
-                            <p> Progression : <?php echo $info['progression'].'%';?>  </p>
-                            <span style="color: red; font-weight: bold; font-size: 22px" >Date échéance : <?php echo $info['dateEcheance'];?> </span>
+                    ?>
 
-                            <div class="center">
-                                <a  href="modifierTache.php?idTache=<?= $info['idTache'] ;?>" class="btn btn-outline-primary">Modifier la tâche</a>
-                                <a  href="assignation.php?idTache=<?= $info['idTache'] ;?>" class="btn btn-primary">Assigner</a>
+                    <div class="projet-details">
+                        <h1>Projet : <?php echo $collaboration['nomProjet'] ;?> crée par <strong> <?php echo $chef['username'] ;?>  </strong> </h1>
 
-                            </div>
+                        <p><strong>Date Création :  </strong>  <?php echo $collaboration['dateCreation'] ;?>  </p>
+                        <p><strong>Description : </strong> <?php echo $collaboration['descriptions'] ;?>  </p>
+                        <p><strong>Etat : </strong>  <?php echo $collaboration['etat'] ;?>  </p>
+                        <span style="color: red; font-weight: bold; font-size: 22px" >Date échéance : <?php echo $collaboration['dateFin'];?> </span>
 
+
+                    </div>
+
+
+                    <div class="div-taches">
+                        <h4>Vos Tâches qui vous sont assignées</h4>
+                        <div class="taches">
+                            <?php
+                            echo '<p>'." ". '</p>';
+                            //Récupérer les taches sur chaque projet
+                            $sqltaches = $pdo->prepare("SELECT Taches.idTache, Taches.idProjet, Taches.nomTache, Taches.dateEcheance, Taches.statut  FROM Assignation INNER JOIN Taches ON Assignation.idUser = Taches.idUser WHERE Assignation.idUser = ? AND Taches.idProjet = ?");
+
+                            $sqltaches->execute(array($idUser, $collaboration['idProjet']));
+
+                            $taches = $sqltaches->fetchAll(PDO::FETCH_ASSOC);
+                            if ($taches){
+                                foreach ($taches as $tache)
+                                {?>
+                                    <p> Tache : <?php echo $tache['nomTache'] .' -- '; echo' Date échéance :  '. $tache['dateEcheance'].' --- ' ; echo 'statut : '. $tache['statut'] . '  ';?>  <a href="../taches/afficheTache.php?idTache=<?= $tache['idTache'] ;?>" class="btn-primary">  Plus </a> </p>
+
+
+                                    <?php
+                                }
+
+
+                            }else{
+                                echo '<p>'. "Aucune tâche assignée" .'</p>';
+
+                            }
+                            echo '<p>'." ".'</p>';
+
+                            ?>
 
 
                         </div>
 
+                    </div>
 
-
-              <?php
+                    <?php
                 }
+            }else{
+                echo '<p style="text-align: center" >'." Aucune collaborations ". '</p>';
             }
 
 
@@ -400,7 +474,7 @@ else{
 
 
 
-        </div>
+</div>
 
 
 

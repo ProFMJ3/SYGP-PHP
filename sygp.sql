@@ -1,3 +1,4 @@
+/*DROP DATABASE sygp;*/
 CREATE DATABASE sygp;
 USE sygp;  
 
@@ -6,7 +7,8 @@ CREATE TABLE IF NOT EXISTS Users (
     username VARCHAR(100) NOT NULL,  
     email VARCHAR(100) NOT NULL,  
     passwords VARCHAR(100),
-    dateInscription DATETIME DEFAULT NOW()
+    dateInscription DATETIME,
+    dateModification DATETIME DEFAULT NULL
 );  
 
 
@@ -16,32 +18,30 @@ CREATE TABLE IF NOT EXISTS Projets (
     descriptions TEXT,  
     etat ENUM('En cours', 'Terminé') DEFAULT 'En cours',
     dateCreation  DATETIME DEFAULT NOW() ,  
-    dateModification DATETIME NULL,
     dateFin DATE,  
     idUser INT,  
-    FOREIGN KEY (idUser) REFERENCES Users(idUser) ON UPDATE CASCADE,
+    FOREIGN KEY (idUser) REFERENCES Users(idUser) ON DELETE CASCADE,
     dateModification DATETIME DEFAULT NULL
 );  
 
 
-CREATE TABLE IF NOT EXISTS Taches (  
+CREATE TABLE IF NOT EXISTS Taches(  
     idTache INT PRIMARY KEY AUTO_INCREMENT,  
     nomTache VARCHAR(100),  
     descriptions TEXT, 
     dateCreation DATETIME DEFAULT NOW(), 
     dateEcheance DATETIME,  
-    statut ENUM('En cours', 'Terminé') DEFAULT "A faire",
+    statut ENUM('A faire','En cours', 'Terminé', 'Reporté') DEFAULT "A faire",
 	priorite  ENUM('Elevée', 'Moyenne', 'Faible') ,
     progression INT DEFAULT 0,
     fichier VARCHAR(255) NULL ,
-    
+    fichierResultatFinal VARCHAR(255) DEFAULT NULL ,
     idProjet INT,  
     idUser INT,  
     FOREIGN KEY (idProjet) REFERENCES Projets(idProjet) ON DELETE CASCADE,  
     FOREIGN KEY (idUser) REFERENCES Users(idUser) ,
     dateModification DATETIME DEFAULT NULL
 );  
-
 
 
 CREATE TABLE Collaboration(

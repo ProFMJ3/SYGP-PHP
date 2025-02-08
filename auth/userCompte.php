@@ -2,11 +2,13 @@
 <?php
 
 session_start();
+include_once("../auth/ConfigClass.php");
+$pdo = ConfigClass::pdo();
 
 //Vérifier si l'utilisateur est connecté
 if (isset($_SESSION['idUser'])) {
 
-    include('../auth/config.php');
+    //include('../auth/config.php');
     //Récupérer l'ID
     $idUser = $_SESSION['idUser'];
 
@@ -256,7 +258,7 @@ if (isset($_SESSION['idUser'])) {
                     <ul class="nav flex-column ms-3">
 
                         <li class="nav-item">
-                            <a class="nav-link" href="#"><i class="bi bi-check-circle"></i> Tâches</a>
+                            <a class="nav-link" href="../projets/userCollaboration.php"><i class="bi bi-check-circle"></i> Mes collaborations</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#"><i class="bi bi-people"></i> Membres du Projet</a>

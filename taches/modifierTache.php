@@ -51,7 +51,7 @@ if (!isset($_SESSION['idUser'])){
 //                'dm'=>$dateModification,
 //                'idTache'=>$idTache,
 //            ));
-            $tacheModification = new TachesClass($idTache, $nn, $nd,  null, null, $nstatut, $npro, null, null, null, $dateModification);
+            $tacheModification = new TachesClass($idTache, $nn, $nd,  null, null, $nstatut, $npro, null, null, null, null, $dateModification);
             $tacheModification->editerTache();
 
 
@@ -247,6 +247,7 @@ if (!isset($_SESSION['idUser'])){
                     <option value="A faire "<?= $staut == 'A faire' ?'selected':''; ?>>A faire</option>
                     <option value="En cours "<?= $staut == 'En cours' ?'selected':''; ?>>En cours</option>
                     <option value="Terminé" "<?= $staut == 'Terminé' ?'selected':''; ?>>Terminé</option>
+                    <option value="Reporté" "<?= $staut == 'Reporté' ?'selected':''; ?>>Reporté</option>
                 </select>
             </div>
 

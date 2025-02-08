@@ -14,6 +14,7 @@ class TachesClass
     protected $statut;
     protected $progession;
     protected $cheminficier;
+    protected $cheminficierFinal;
 
     protected $idProjet;
 
@@ -39,7 +40,7 @@ class TachesClass
 
     // Setters
     public function setNomTache($newNomTache) {
-        $this->nomProjet = $newNomTache;
+        $this->nomTache = $newNomTache;
     }
 
     public function setDescription($newDescription)
@@ -54,7 +55,7 @@ class TachesClass
 
 
 
-    public function __construct($idTache, $nomTache, $description, $dateEcheance, $priorite, $statut, $progession, $cheminficier, $idProjet, $idUser, $dateModification)
+    public function __construct($idTache, $nomTache, $description, $dateEcheance, $priorite, $statut, $progession, $cheminficier,$cheminficierFinal, $idProjet, $idUser, $dateModification)
     {
 
         $this->idTache = $idTache;
@@ -65,6 +66,7 @@ class TachesClass
         $this->statut = $statut;
         $this->progession = $progession;
         $this->cheminficier = $cheminficier;
+        $this->cheminficierFinal = $cheminficierFinal;
         $this->idProjet = $idProjet;
         $this->idUser = $idUser;
         $this->dateModification = $dateModification;
@@ -102,13 +104,14 @@ class TachesClass
 
             $pdo = ConfigClass::pdo();
 
-            $sql2 = $pdo->prepare("UPDATE Taches SET nomTache=:nn, descriptions=:nd, statut=:nstatut, progression=:npro, dateModification=:dm WHERE idTache =:idTache");
+            $sql2 = $pdo->prepare("UPDATE Taches SET nomTache=:nn, descriptions=:nd, statut=:nstatut, progression=:npro,ficierResusltatFinal=:cheminficierFinal dateModification=:dm WHERE idTache =:idTache");
             $result = $sql2->execute(array(
                 'nn'=>$this->nomTache,
                 'nd'=>$this->description,
                 //'ndEcheance'=>$ndEcheance,
                 'nstatut'=>$this->statut,
                 'npro'=>$this->progession,
+                'cheminficierFinal'=>$this->cheminficierFinal,
                 'dm'=>$this->dateModification,
                 'idTache'=>$this->idTache,
             ));

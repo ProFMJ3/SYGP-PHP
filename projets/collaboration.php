@@ -1,6 +1,8 @@
 <?php
 
-    include('../auth/config.php');
+   // include('../auth/config.php');
+include_once("../auth/ConfigClass.php");
+$pdo = ConfigClass::pdo();
 
 try {
     $message = array();

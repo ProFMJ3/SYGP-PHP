@@ -1,11 +1,15 @@
 <?php
 
+include_once("../auth/ConfigClass.php");
+$pdo = ConfigClass::pdo();
 
+include_once("UserClass.php");
+session_start();
 
 $errors = [];
 $message="";
-session_start();
-include("config.php");
+//session_start();
+//include("config.php");
 if (!isset($_SESSION['idUser'])){
     header('Location: ../auth/connexion.php');
     exit();
@@ -73,21 +77,26 @@ if (!isset($_SESSION['idUser'])){
 
 
             if (empty($errors)) {
+                $dateModification = date("Y-m-d") .' '. date("H:i:s");
 
 
                 $passwordYes = $password;
-                $sql = "UPDATE Users SET email=:email, username=:username, passwords=:password WHERE idUser =:idUser";
-                $stmt = $pdo->prepare($sql);
 
-                $result = $stmt->execute(array(
-                    'email' => $email,
-                    'username' => $username,
-                    'password' => $passwordYes,
-                    'idUser' => $idUser,
-                ));
+//                $sql = "UPDATE Users SET email=:email, username=:username, passwords=:password WHERE idUser =:idUser";
+//                $stmt = $pdo->prepare($sql);
+//
+//                $result = $stmt->execute(array(
+//                    'email' => $email,
+//                    'username' => $username,
+//                    'password' => $passwordYes,
+//                    'idUser' => $idUser,
+//                ));
+
+                $editerUser = new UserClass($idUser, $username, $email, $passwordYes, $dateModification);
+                $editerUser->modifierUser();
 
 
-                if ($result) {
+                if ($editerUser) {
                     header('Location: connexion.php');
                     exit();
                 } else {

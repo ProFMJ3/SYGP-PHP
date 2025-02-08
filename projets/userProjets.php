@@ -2,11 +2,13 @@
 <?php
 
 session_start();
+include_once("../auth/ConfigClass.php");
+$pdo = ConfigClass::pdo();
 
 //Vérifier si l'utilisateur est connecté
 if (isset($_SESSION['idUser'])) {
 
-    include('../auth/config.php');
+    //include('../auth/config.php');
     //Récupérer l'ID
     $idUser = $_SESSION['idUser'];
 
@@ -130,6 +132,16 @@ if (isset($_SESSION['idUser'])) {
 
 
         }
+
+        a{
+            display: flex;
+            margin-top: 20px;
+            cursor: pointer;
+            padding: 10px 20px;
+            text-decoration: none;
+
+
+        }
         .sidebar a {
             color: white;
             text-decoration: none;
@@ -158,6 +170,7 @@ if (isset($_SESSION['idUser'])) {
             color: white;
 
         }
+
 
         .decon{
             display: flex;
@@ -281,6 +294,8 @@ if (isset($_SESSION['idUser'])) {
             color: black;
 
         }
+
+
         .div-taches{
 
             flex-direction: column;
@@ -302,9 +317,9 @@ if (isset($_SESSION['idUser'])) {
 
          }
 
-        .taches  .btn-success {
+        .taches  .btn-primary {
             height: 20px;
-            font-size: 10px;
+            font-size: 18px;
             align-content: center;
             align-items: center;
 
@@ -398,7 +413,7 @@ if (isset($_SESSION['idUser'])) {
                     <ul class="nav flex-column ms-3">
 
                         <li class="nav-item">
-                            <a class="nav-link" href="#"><i class="bi bi-check-circle"></i> Tâches</a>
+                            <a class="nav-link" href="userCollaboration.php"><i class="bi bi-check-circle"></i> Mes collaborations</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#"><i class="bi bi-people"></i> Membres du Projet</a>
@@ -468,6 +483,7 @@ if (isset($_SESSION['idUser'])) {
                             ?>
 
                         </div>
+
                         <div class="div-taches">
                         <h3>Les Tâches</h3>
                         <div class="taches">
@@ -485,12 +501,12 @@ if (isset($_SESSION['idUser'])) {
 
                             <?php
 
-
                             }
 
                             ?>
 
                         </div>
+
                         </div>
 
 

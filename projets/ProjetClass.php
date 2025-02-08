@@ -67,12 +67,11 @@ class ProjetClass
             $pdo = ConfigClass::pdo();
 
 
-            $sql1 = $pdo->prepare('INSERT INTO Projets(nomProjet, descriptions, dateFin, dateMofication, idUser)VALUES (:nomProjet, :descriptions, :dateFin, :df, :idUser)');
+            $sql1 = $pdo->prepare('INSERT INTO Projets(nomProjet, descriptions, dateFin, idUser)VALUES (:nomProjet, :descriptions, :dateFin, :idUser)');
             $result = $sql1->execute(array(
                 'nomProjet' => $this->nomProjet,
                 'descriptions' => $this->description,
                 'dateFin' => $this->dateFin,
-                'df' => $this->dateModification,
                 'idUser' => $this->idUser,
             ));
 

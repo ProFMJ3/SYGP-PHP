@@ -1,6 +1,11 @@
 <?php
 
-include("config.php");
+//include("config.php");
+include_once("../auth/ConfigClass.php");
+$pdo = ConfigClass::pdo();
+
+include_once("UserClass.php");
+session_start();
 
 $message = "";
 $errors = [];
@@ -52,16 +57,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['username'], $_POST['em
 
         $passwordYes = $password;
 
-        $sql = "INSERT INTO users (email, username, passwords) VALUES (:email, :username, :password)";
-        $stmt = $pdo->prepare($sql);
 
-        $result = $stmt->execute(array(
-            'email' => $email,
-            'username' => $username,
-            'password' => $passwordYes,
-        ));
 
-        if ($result) {
+//        $sql = "INSERT INTO users (email, username, passwords) VALUES (:email, :username, :password)";
+//        $stmt = $pdo->prepare($sql);
+//
+//        $result = $stmt->execute(array(
+//            'email' => $email,
+//            'username' => $username,
+//            'password' => $passwordYes,
+//        ));
+
+        $user = new  UserClass(null, $username, $email, $passwordYes,null);
+        $user->newUser();
+
+
+        if ($user) {
 
             header('Location: connexion.php');
             exit();

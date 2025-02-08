@@ -1,10 +1,13 @@
 
 <?php
 
-session_start();
+
 //include('../auth/config.php');
 include_once("../auth/ConfigClass.php");
 $pdo = ConfigClass::pdo();
+
+include_once("../projets/ProjetClass.php");
+session_start();
 
 //Vérifier si l'utilisateur est connecté
 if(isset($_SESSION['idUser'])) {
@@ -189,8 +192,8 @@ else{
         }
 
 
-        .taches{
-            width:50%;
+        .projet{
+            width:100%;
             max-width:100vh;
             height: 50%;
             max-height: 80vh;
@@ -202,9 +205,10 @@ else{
             font-family: 'Times New Roman', sans-serif;
             box-shadow: 0 3px 10px rgba(0,1,0,0.2);
 
+
         }
 
-        .taches h1{
+        .projet h1{
             margin-bottom:30px;
             margin-top:20px;
             text-align: center;
@@ -215,7 +219,7 @@ else{
 
 
 
-        .taches-details p{
+        .projet-details p{
             padding-top: 10px;
             justify-content: right;
             font-weight: normal;
@@ -223,14 +227,63 @@ else{
             font-size: 20px;
         }
 
-        .taches-details .btn{
+        .projet-details .btn{
             font-weight: bold;
             font-size: 20px
         }
         .center{
+            display: flex;
             text-align: center;
             margin-bottom:20px ;
+            justify-content: center;
 
+
+
+
+        }
+
+
+        .div-taches{
+
+            flex-direction: column;
+        }
+
+        .taches{
+            display: flex;
+            flex-direction: column;
+            gap:10px;
+            margin-bottom: 20px;
+
+        }
+        .taches p{
+            align-items: center;
+            text-align: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+            display: flex;
+
+        }
+
+        .taches  .center {
+            height: 20px;
+            font-size: 18px;
+            align-content: center;
+            align-items: center;
+            margin-bottom: 30px;
+
+        }
+
+
+
+        .div-taches h3{
+            text-align: center;
+        }
+        .div-taches a {
+            text-decoration: none;
+        }
+        .div-taches p{
+            gap:10px;
         }
 
 
@@ -273,20 +326,20 @@ else{
                     try {
 
 
-                    $sql = $pdo->prepare("SELECT idProjet, nomProjet FROM Projets WHERE idUser =?");
+                        $sql = $pdo->prepare("SELECT idProjet, nomProjet FROM Projets WHERE idUser =?");
 
-                    if($sql->execute(array($idUser))){
-                        ?>
-                        <?php
-                        while ($resultats = $sql->fetch())
-                        {
+                        if($sql->execute(array($idUser))){
                             ?>
-
-                            <option class="form-control" value="<?=htmlspecialchars($resultats['idProjet']);?>"> <?php echo(($resultats['nomProjet'])); ?> </option>
-
                             <?php
-                        } ;
-                    }
+                            while ($resultats = $sql->fetch())
+                            {
+                                ?>
+
+                                <option class="form-control" value="<?=htmlspecialchars($resultats['idProjet']);?>"> <?php echo(($resultats['nomProjet'])); ?> </option>
+
+                                <?php
+                            } ;
+                        }
                     }catch (Exception $e){
                         echo('Erreur '.$e->getMessage());
                     }
@@ -315,11 +368,11 @@ else{
                     <a class="nav-link active" href="../Dashboard/dash.php"> <i class="bi bi-house-fill"></i> Dashboard</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="../projets/userProjets.php"><i class="bi bi-folder"></i> Mes Projets</a>
+                    <a class="nav-link" href="userProjets.php"><i class="bi bi-folder"></i> Mes Projets</a>
                     <ul class="nav flex-column ms-3">
 
                         <li class="nav-item">
-                            <a class="nav-link" href="../projets/userCollaboration.php"><i class="bi bi-check-circle"></i> Mes Collaborations</a>
+                            <a class="nav-link" href="userCollaboration.php"><i class="bi bi-check-circle"></i>Mes collabirations</a>
                         </li>
                         <li class="nav-item">
 
@@ -344,47 +397,86 @@ else{
             </ul>
         </div>
 
-        <div class="taches">
+        <div class="projet">
 
 
             <?php
 
-            if(isset($_GET['idTache'])){
-            $idTache = $_GET['idTache'];
+            if(isset($_GET['idProjet'])){
+                $idProjet = $_GET['idProjet'];
 
-            //Récupérer les taches sur chaque projet
-            $infotache = $pdo->prepare("SELECT idTache, nomTache, dateCreation, dateEcheance, statut, progression, priorite  FROM Taches WHERE idTache = ?");
+                //Récupérer les taches sur chaque projet
+                $infoProjet = $pdo->prepare("SELECT idProjet, nomProjet, descriptions, dateCreation, dateFin, etat FROM Projets WHERE idProjet = ?");
+                $infoProjet->execute(array($idProjet));
 
-            $infotache->execute(array($idTache));
-
-            $info = $infotache->fetch(PDO::FETCH_ASSOC);
+                $info = $infoProjet->fetch(PDO::FETCH_ASSOC);
 
 
                 if($info)
 
                 {?>
-                        <div class="taches-details">
-                            <h1>Nom de la tache : <?php echo $info['nomTache'] .' crée le ' ;echo $info['dateCreation'];?> </h1>
+                    <div class="projet-details">
+                        <h1>Projet : <?php echo $info['nomProjet'] ;?> </h1>
 
-                            <p>Priorité de la tache :  <?php echo $info['priorite'] ;?>  </p>
+                        <p><strong>Description   </strong> :  <?php echo $info['dateCreation'] ;?>  </p>
+                        <p><strong>Etat : </strong>  <?php echo $info['etat'] ;?>  </p>
+                        <span style="color: red; font-weight: bold; font-size: 22px" ><strong>Date échéance :<strong> <?php echo $info['dateFin'];?> </span>
 
-                            <p>Statut de la tache : <?php echo $info['statut'];?>  </p>
-                            <p> Progression : <?php echo $info['progression'].'%';?>  </p>
-                            <span style="color: red; font-weight: bold; font-size: 22px" >Date échéance : <?php echo $info['dateEcheance'];?> </span>
-
-                            <div class="center">
-                                <a  href="modifierTache.php?idTache=<?= $info['idTache'] ;?>" class="btn btn-outline-primary">Modifier la tâche</a>
-                                <a  href="assignation.php?idTache=<?= $info['idTache'] ;?>" class="btn btn-primary">Assigner</a>
-
-                            </div>
-
-
+                        <div class="center">
+                            <a  href="modifierProjet.php?idProjet=<?= $info['idProjet'] ;?>" class="btn btn-outline-primary">Modifier le projet</a>
+<!--                            <a  href="collaboration.php?idProjet=--><?php //= $info['idProjet'] ;?><!--" class="btn btn-primary" >Collaborateur</a>-->
 
                         </div>
 
+                    </div>
+
+                    <div class="div-taches">
+                        <h3>Les Tâches</h3>
+                        <div class="taches">
 
 
-              <?php
+                            <?php
+                            //Récupérer les taches sur chaque projet
+                            $sqltaches = $pdo->prepare("SELECT idTache, nomTache, dateEcheance, statut  FROM Taches WHERE idProjet = ?");
+
+                            $sqltaches->execute(array($info['idProjet']));
+
+                            $taches = $sqltaches->fetchAll(PDO::FETCH_ASSOC);
+                            if ($taches){
+
+
+                            foreach ($taches as $tache)
+                            {?>
+                                <p> Tache : <?php echo $tache['nomTache'] .'  --  '; echo' Date échéance :  '. $tache['dateEcheance'].' --- ' ; echo 'statut : '. $tache['statut'] . '  ';?>  <a href="../taches/afficheTache.php?idTache=<?= $tache['idTache'] ;?>" class="btn-primary">  Plus </a> </p>
+
+
+                            <?php
+                            }?>
+                             <?php
+
+                            }else
+                            {?>
+
+
+
+                                <p>Aucune tâche créée</p>
+                                <div class="center">
+                                    <a href="../taches/ajoutTaches.php" class="btn btn-primary"> Ajouter une tâche </a>
+
+                                </div>
+
+                            <?php
+                            }
+
+                            ?>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <?php
                 }
             }
 
@@ -400,7 +492,7 @@ else{
 
 
 
-        </div>
+</div>
 
 
 

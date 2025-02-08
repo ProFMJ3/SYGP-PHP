@@ -68,7 +68,7 @@ if (isset($_SESSION['idUser'])){
         if(empty($message)){
 
 
-            $tache = new TachesClass(null, $nom, $desc, $dateEcheance, $priorite, null, null,null, $cheminFichier, $idProjet, $idUser);
+            $tache = new TachesClass(null, $nom, $desc, $dateEcheance, $priorite, null, null, $cheminFichier, null, $idProjet, $idUser);
             $tache->nouveauTache();
 
             if ($tache) {
