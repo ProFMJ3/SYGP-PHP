@@ -3,6 +3,7 @@
    // include('../auth/config.php');
 include_once("../auth/ConfigClass.php");
 $pdo = ConfigClass::pdo();
+include_once ('CollaborationClass.php');
 
 try {
     $message = array();
@@ -20,16 +21,19 @@ try {
             exit();
         }
 
+//
+//        $sql = $pdo->prepare("INSERT INTO Collaboration(dateCollaboration, idProjet, idUser) VALUES (:dC,:iP, :iu)");
+//        $sql->execute(array(
+//            'dC'=>$date,
+//            'iP'=>$idProjet,
+//            'iu'=>$idUser,
+//        ));
+        $collaboration = new  CollaborationClass($date, $idProjet, $idUser);
+        $collaboration->nouveauCollaboration();
 
-        $sql = $pdo->prepare("INSERT INTO Collaboration(dateCollaboration, idProjet, idUser) VALUES (:dC,:iP, :iu)");
-        $sql->execute(array(
-            'dC'=>$date,
-            'iP'=>$idProjet,
-            'iu'=>$idUser,
-        ));
 
 
-        if($sql){
+        if($collaboration){
             $messageSucces = " Collaboration avec " . $nom . " a été éffectué avec Succès";
             header('Location:../Dashboard/dash.php');
             exit();

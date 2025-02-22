@@ -59,7 +59,7 @@ idAssignation INT PRIMARY KEY AUTO_INCREMENT,
 dateAssignation DATETIME,
 idTache INT,
 idUser INT, 
-FOREIGN KEY (idTache) REFERENCES Taches(idProjet) ON DELETE CASCADE,  
+FOREIGN KEY (idTache) REFERENCES Taches(idTache) ON DELETE CASCADE,  
 FOREIGN KEY (idUser) REFERENCES Users(idUser) ON DELETE CASCADE
 );
 

@@ -35,19 +35,16 @@ if (isset($_SESSION['idUser'])){
             if(!in_array($fichier['type'], $type)) {
                 $message[] = "Type de fichiers autorisés sont : png, jpg, jpeg, pdf, docx";
             }
-//            else{
+
 
 
                 //nommer le fichier pour éviter les fichiers de meme noms
                 $nomFichierSoumis = basename($fichier['name']);
                 $nouveauNom =  uniqid() . "_" . $nomFichierSoumis;
                 $cheminFichier = $dossierTelechargement .$nouveauNom;
+                move_uploaded_file($fichier['tmp_name'],$cheminFichier);
 
-//                if (!move_uploaded_file($fichier['tmp_name'], $cheminFichier)) {
-//                    //$valide =True;
-//                    $message[] = "Erreur lors du téléchargement du fichier. Veuillez Télécharger le fichier !!";
-//                }
-//                }
+
 
 
         }else{
@@ -68,7 +65,7 @@ if (isset($_SESSION['idUser'])){
         if(empty($message)){
 
 
-            $tache = new TachesClass(null, $nom, $desc, $dateEcheance, $priorite, null, null, $cheminFichier, null, $idProjet, $idUser);
+            $tache = new TachesClass(null, $nom, $desc, $dateEcheance, null, $priorite, null, $cheminFichier, null, $idProjet, $idUser, null);
             $tache->nouveauTache();
 
             if ($tache) {
@@ -268,9 +265,10 @@ if (isset($_SESSION['idUser'])){
 
                 <option value="" disabled selected>Selectionnez le Projet</option>
                 <?php
-                $sql = $pdo->prepare("SELECT idProjet, nomProjet FROM Projets WHERE idUser = ?");
+                $etat = "En cours";
+                $sql = $pdo->prepare("SELECT idProjet, nomProjet FROM Projets WHERE idUser =? AND etat =?");
 
-                if($sql->execute(array($idUser))){
+                if($sql->execute(array($idUser, $etat))){
                     ?>
                     <?php
                     while ($val = $sql->fetch())

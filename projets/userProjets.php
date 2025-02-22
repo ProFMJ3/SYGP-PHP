@@ -371,9 +371,10 @@ if (isset($_SESSION['idUser'])) {
 
                     <option class="form-control" value="" disabled selected> Select the Projet</option>
                     <?php
-                    $sql = $pdo->prepare("SELECT idProjet, nomProjet FROM Projets WHERE idUser =?");
+                    $etat = "En cours";
+                    $sql = $pdo->prepare("SELECT idProjet, nomProjet FROM Projets WHERE idUser =? AND etat =? ");
 
-                    if($sql->execute(array($idUser))){
+                    if($sql->execute(array($idUser, $etat))){
                         ?>
                         <?php
                         while ($resultats = $sql->fetch())
@@ -465,9 +466,11 @@ if (isset($_SESSION['idUser'])) {
                         <p class="descriptionProjet">DESCRIPTION DU PROJET : <?php echo ($projet['descriptions']); ?> </p>
                         <p style="color: blue; font-weight: bold; font-size: 20px "> <?php echo htmlspecialchars($projet['etat']); ?>  </p>
                         <span style="color: red; font-weight: bold"> DEADLINE : <?php echo htmlspecialchars($projet['dateFin']); ?>  </span>
+                        <?php echo '<p>'. ' '. '</p>';?>
                         <div class="colla">
                             <h3> Collaborateurs : <?php echo intval($valeurs['nbreCollaboration']); ?>  </h3>
                             <?php
+
 
                             //Récupérer les collaborateurs sur chaque projet
                             $projetColla = $pdo->prepare("SELECT Users.username, Users.email, Collaboration.dateCollaboration  FROM Collaboration  INNER JOIN Users ON Collaboration.idUser = Users.idUser WHERE Collaboration.idProjet = ?");
@@ -480,6 +483,7 @@ if (isset($_SESSION['idUser'])) {
                                 echo "Email : " . $collaborateur['email'] . "<br>";
                                 echo "Date de collaboration : " . $collaborateur['dateCollaboration'] . "<br><hr>";
                             }
+                            echo '<p>'. ' '. '</p>';
                             ?>
 
                         </div>
@@ -494,23 +498,39 @@ if (isset($_SESSION['idUser'])) {
                             $sqltaches = $pdo->prepare("SELECT idTache, nomTache, dateEcheance, statut  FROM Taches WHERE idProjet = ?");
 
                             $sqltaches->execute(array($projet['idProjet']));
-                            $taches = $sqltaches->fetchAll(PDO::FETCH_ASSOC);
-                            foreach ($taches as $tache)
-                            {?>
-                                <p> Tache : <?php echo $tache['nomTache'] .'  ---  '; echo' Date échéance :  '. $tache['dateEcheance'].' ----- ' ; echo 'statut : '. $tache['statut'] . '  ';?>  <a href="../taches/afficheTache.php?idTache=<?= $tache['idTache'] ;?>" class="btn-primary">  Plus </a> </p>
 
+                            if($taches = $sqltaches->fetchAll(PDO::FETCH_ASSOC)){
+                                foreach ($taches as $tache)
+                                {?>
+                                    <p> Tache : <?php echo $tache['nomTache'] .'  ---  '; echo' Date échéance :  '. $tache['dateEcheance'].' ----- ' ; echo 'statut : '. $tache['statut'] . '  ';?>  <a href="../taches/afficheTache.php?idTache=<?= $tache['idTache'] ;?>" class="btn-primary">  Plus </a> </p>
+
+                                <?php
+
+                                }?>
                             <?php
+                            }else{
+                                echo '<p>'. " Aucune tâche n'a pas été créé pour ce projet ". '</p>';
 
                             }
+
 
                             ?>
 
                         </div>
 
                         </div>
+                        <?php
+                            if ($projet['etat'] == "En cours"){?>
+
+                                <a href="../projets/modifierProjet.php?idProjet= <?=$projet['idProjet'];?>" class="btn1 btn btn-success"> <i class="fas fa-edit" ></i>Modifier le projet </a>
+                            <?php
+                            }else{
+                                echo '<p>'. ' '. '</p>';
+                            }
+
+                        ?>
 
 
-                        <a href="../projets/modifierProjet.php?idProjet= <?=$projet['idProjet'];?>" class="btn1 btn btn-success"> <i class="fas fa-edit" ></i>Modifier le projet </a>
                     </div>
 
                     <?php

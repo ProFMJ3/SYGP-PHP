@@ -87,10 +87,11 @@ class ProjetClass
         try {
 
             $pdo = ConfigClass::pdo();
-            $sql2 = $pdo->prepare("UPDATE Projets SET nomProjet=:n, descriptions=:d, dateFin=:df, dateModification =:dm WHERE idProjet =:idProjet");
+            $sql2 = $pdo->prepare("UPDATE Projets SET nomProjet=:n, descriptions=:d, etat=:etat, dateFin=:df, dateModification =:dm WHERE idProjet =:idProjet");
             $result = $sql2->execute(array(
                 'n'=>$this->nomProjet,
                 'd'=>$this->description,
+                'etat'=>$this->etat,
                 'df'=>$this->dateFin,
                 'dm'=>$this->dateModification,
                 'idProjet'=>$this->idProjet,

@@ -20,25 +20,28 @@ if (!isset($_SESSION['idUser'])){
         $recuperation->execute(array($idProjet));
         $valeurs = $recuperation->fetch();
         if($valeurs){
+
             $nom = $valeurs['nomProjet'];
             $desc = $valeurs['descriptions'];
             $dateFin = $valeurs['dateFin'];
             $etat = $valeurs['etat'];
 
-
         }
+
 
 
     try {
 
 
-        if ($_SERVER["REQUEST_METHOD"] == 'POST' && isset($_POST['nom'], $_POST['description'],$_POST['dateFin'])) {
+        if ($_SERVER["REQUEST_METHOD"] == 'POST' && isset($_POST['nom'], $_POST['description'],$_POST['dateFin'], $_POST['etat'])) {
             $message1 = "";
             $message2 = "";
             $n = htmlspecialchars($_POST['nom']);
             $d = htmlspecialchars($_POST['description']);
             $df = htmlspecialchars($_POST['dateFin']);
             $dateModification = date('Y-m-d') . ' ' . date('H:i:s');
+            $netat = $_POST['etat'];
+
 
 
 
@@ -51,7 +54,7 @@ if (!isset($_SESSION['idUser'])){
 //                'idProjet'=>$idProjet,
 //            ));
 
-            $projetModification = new ProjetClass($idProjet, $n, $d, $df, $dateModification, null, $etat);
+            $projetModification = new ProjetClass($idProjet, $n, $d, $df, $dateModification, null, $netat);
             $projetModification->editerProjet();
 
 
@@ -256,7 +259,6 @@ if (!isset($_SESSION['idUser'])){
             <select name="etat" id="etat">
                 <option value="En cours" <?= $etat == 'En cours' ?:''; ?> >En cours</option>
                 <option value="Terminé "  >Terminé</option>
-<!--                --><?php //= $etat == 'Terminé' ?:''; ?>
             </select>
         </div>
 

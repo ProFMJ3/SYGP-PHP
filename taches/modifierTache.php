@@ -23,7 +23,7 @@ if (!isset($_SESSION['idUser'])){
         if($valeurs){
             $nom = $valeurs['nomTache'];
             $desc = $valeurs['descriptions'];
-            $staut = $valeurs['statut'];
+            $statut = $valeurs['statut'];
             $prog = $valeurs['progression'];
 
         }
@@ -36,9 +36,12 @@ if (!isset($_SESSION['idUser'])){
             $message2 = "";
             $nn = htmlspecialchars($_POST['nom']);
             $nd = htmlspecialchars($_POST['description']);
-            $nstatut = $_POST['statut'];
+            $nouveauStatut = $_POST['statut'];
             $npro = intval($_POST['progression']);
             $dateModification = date('Y-m-d') . ' ' . date('H:i:s');
+            if ($nouveauStatut == "Terminé"){
+                $npro = 100;
+            }
 
 //
 //            $sql = $pdo->prepare("UPDATE Taches SET nomTache=:nn, descriptions=:nd, statut=:nstatut, progression=:npro, dateModification=:dm WHERE idTache =:idTache");
@@ -51,7 +54,7 @@ if (!isset($_SESSION['idUser'])){
 //                'dm'=>$dateModification,
 //                'idTache'=>$idTache,
 //            ));
-            $tacheModification = new TachesClass($idTache, $nn, $nd,  null, null, $nstatut, $npro, null, null, null, null, $dateModification);
+            $tacheModification = new TachesClass($idTache, $nn, $nd,  null, $nouveauStatut, null, $npro, null, null, null, null, $dateModification);
             $tacheModification->editerTache();
 
 
@@ -244,10 +247,10 @@ if (!isset($_SESSION['idUser'])){
                 <label for="statut">Statut :</label>
                 <select name="statut" id="statut">
 
-                    <option value="A faire "<?= $staut == 'A faire' ?'selected':''; ?>>A faire</option>
-                    <option value="En cours "<?= $staut == 'En cours' ?'selected':''; ?>>En cours</option>
-                    <option value="Terminé" "<?= $staut == 'Terminé' ?'selected':''; ?>>Terminé</option>
-                    <option value="Reporté" "<?= $staut == 'Reporté' ?'selected':''; ?>>Reporté</option>
+                    <option value="A faire "  <?= $statut == 'A faire' ?:''; ?> >A faire</option>
+                    <option value="En cours" <?= $statut == 'En cours' ?:''; ?> >En cours</option>
+                    <option value="Terminé" <?= $statut == 'Terminé' ?:''; ?> >Terminé</option>
+                    <option value="Reporté" <?= $statut == 'Reporté' ?:''; ?> >Reporté</option>
                 </select>
             </div>
 

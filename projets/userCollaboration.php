@@ -318,10 +318,10 @@ else{
                     <?php
                     try {
 
+                        $etat = "En cours";
+                        $sql = $pdo->prepare("SELECT idProjet, nomProjet FROM Projets WHERE idUser =? AND etat =? ");
 
-                        $sql = $pdo->prepare("SELECT idProjet, nomProjet FROM Projets WHERE idUser =?");
-
-                        if($sql->execute(array($idUser))){
+                        if($sql->execute(array($idUser, $etat))){
                             ?>
                             <?php
                             while ($resultats = $sql->fetch())

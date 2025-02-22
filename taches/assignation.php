@@ -4,11 +4,12 @@
 
 include_once("../auth/ConfigClass.php");
 $pdo = ConfigClass::pdo();
-
+include_once ("AssignationClass.php");
 $errors = [];
 
 if (isset($_GET['idTache'])){
     $idTache = $_GET['idTache'];
+
 
     $rec = $pdo->prepare("SELECT idProjet FROM Taches WHERE idTache =?");
     $rec->execute(array($idTache));
@@ -34,9 +35,11 @@ if (isset($_GET['idTache'])){
                 $sql = $pdo->prepare("INSERT INTO Assignation(dateAssignation, idTache, idUser) VALUES (:date,:idTache, :idColla)");
                 $sql->execute(array(
                     'date'=>$date,
-                    'idTache'=>$idProjet,
+                    'idTache'=>$idTache,
                     'idColla'=>$idCollaborateur,
                 ));
+//                $assignation = new  AssignationClass($date, $idTache, $idCollaborateur);
+//                $assignation->nouveauAssignation();
 
 
                 if($sql){

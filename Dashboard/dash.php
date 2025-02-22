@@ -299,9 +299,11 @@ if (isset($_SESSION['idUser'])) {
 
                             <option class="form-control" value="" disabled selected> Select the Projet</option>
                             <?php
-                            $sql = $pdo->prepare("SELECT idProjet, nomProjet FROM Projets WHERE idUser =?");
 
-                            if($sql->execute(array($idUser))){
+                            $etat = "En cours";
+                            $sql = $pdo->prepare("SELECT idProjet, nomProjet FROM Projets WHERE idUser =? AND etat =? ");
+
+                            if($sql->execute(array($idUser, $etat))){
                                 ?>
                                 <?php
                                 while ($resultats = $sql->fetch())

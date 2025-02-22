@@ -196,7 +196,7 @@ else{
             width:100%;
             max-width:100vh;
             height: 50%;
-            max-height: 80vh;
+            max-height: 100vh;
             margin:auto;
             border-radius:10px;
             padding-left: 10px;
@@ -326,9 +326,10 @@ else{
                     try {
 
 
-                        $sql = $pdo->prepare("SELECT idProjet, nomProjet FROM Projets WHERE idUser =?");
+                        $etat = "En cours";
+                        $sql = $pdo->prepare("SELECT idProjet, nomProjet FROM Projets WHERE idUser =? AND etat =? ");
 
-                        if($sql->execute(array($idUser))){
+                        if($sql->execute(array($idUser, $etat))){
                             ?>
                             <?php
                             while ($resultats = $sql->fetch())

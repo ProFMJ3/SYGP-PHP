@@ -373,8 +373,19 @@ else{
                             <span style="color: red; font-weight: bold; font-size: 22px" >Date échéance : <?php echo $info['dateEcheance'];?> </span>
 
                             <div class="center">
-                                <a  href="modifierTache.php?idTache=<?= $info['idTache'] ;?>" class="btn btn-outline-primary">Modifier la tâche</a>
-                                <a  href="assignation.php?idTache=<?= $info['idTache'] ;?>" class="btn btn-primary">Assigner</a>
+
+                                <?php
+                                    if($info['statut'] != "Terminé"){?>
+                                        <a  href="modifierTache.php?idTache=<?= $info['idTache'] ;?>" class="btn btn-outline-primary">Modifier la tâche</a>
+                                        <a  href="assignation.php?idTache=<?= $info['idTache'] ;?>" class="btn btn-primary">Assigner</a>
+
+                                    <?php
+                                    }else{
+
+                                        echo '<p>'. ' ' . '</p>';
+                                    }
+                                ?>
+
 
                             </div>
 

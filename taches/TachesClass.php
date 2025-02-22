@@ -13,8 +13,8 @@ class TachesClass
     protected $priorite;
     protected $statut;
     protected $progession;
-    protected $cheminficier;
-    protected $cheminficierFinal;
+    protected $fichier;
+    protected $fichierFinal;
 
     protected $idProjet;
 
@@ -55,7 +55,7 @@ class TachesClass
 
 
 
-    public function __construct($idTache, $nomTache, $description, $dateEcheance, $priorite, $statut, $progession, $cheminficier,$cheminficierFinal, $idProjet, $idUser, $dateModification)
+    public function __construct($idTache, $nomTache, $description, $dateEcheance, $statut, $priorite, $progession, $fichier,$fichierFinal, $idProjet, $idUser, $dateModification)
     {
 
         $this->idTache = $idTache;
@@ -65,8 +65,8 @@ class TachesClass
         $this->priorite = $priorite;
         $this->statut = $statut;
         $this->progession = $progession;
-        $this->cheminficier = $cheminficier;
-        $this->cheminficierFinal = $cheminficierFinal;
+        $this->fichier = $fichier;
+        $this->fichierFinal = $fichierFinal;
         $this->idProjet = $idProjet;
         $this->idUser = $idUser;
         $this->dateModification = $dateModification;
@@ -86,7 +86,7 @@ class TachesClass
                 'descriptions'=>$this->description,
                 'dateEcheance'=>$this->dateEcheance,
                 'priorite'=> $this->priorite,
-                'fichier'=>$this->cheminficier,
+                'fichier'=>$this->fichier,
                 'idProjet'=>$this->idProjet,
                 'idUser'=>$this->idUser,
             ));
@@ -104,17 +104,19 @@ class TachesClass
 
             $pdo = ConfigClass::pdo();
 
-            $sql2 = $pdo->prepare("UPDATE Taches SET nomTache=:nn, descriptions=:nd, statut=:nstatut, progression=:npro,ficierResusltatFinal=:cheminficierFinal dateModification=:dm WHERE idTache =:idTache");
-            $result = $sql2->execute(array(
-                'nn'=>$this->nomTache,
-                'nd'=>$this->description,
+
+            $sql2 = $pdo->prepare(" UPDATE Taches SET nomTache=:n, descriptions=:d, statut=:statut, progression=:pro,fichierResultatFinal=:fichierFinal, dateModification=:dm WHERE idTache =:idTache");
+            $result2 = $sql2->execute(array(
+                'n'=>$this->nomTache,
+                'd'=>$this->description,
                 //'ndEcheance'=>$ndEcheance,
-                'nstatut'=>$this->statut,
-                'npro'=>$this->progession,
-                'cheminficierFinal'=>$this->cheminficierFinal,
+                'statut'=>$this->statut,
+                'pro'=>$this->progession,
+                'fichierFinal'=>$this->fichierFinal,
                 'dm'=>$this->dateModification,
                 'idTache'=>$this->idTache,
             ));
+
 
         }catch (Exception $e){
             echo "Une erreur s'est produite".$e->getMessage();
