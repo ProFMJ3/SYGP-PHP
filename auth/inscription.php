@@ -124,7 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['username'], $_POST['em
         }
         .container{
             max-width: 400px;
-            margin: 100px auto;
+            margin: 20px auto;
             background-color: #fff;
             padding: 20px 30px;
             border-radius: 30px;
@@ -132,7 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['username'], $_POST['em
             text-align: center;
             display: flex;
             flex-direction: column;
-            color: green;
+            color: black;
             font-family: "Times New Roman", sans-serif;
         }
         /*form{
@@ -156,16 +156,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['username'], $_POST['em
             color: gray;
         }
         button{
-            color: green;
-            background-color: orange;
+            color: white;
+            background-color: green;
             border-radius: 50px;
-            font-weight: bolder;
+
             cursor: pointer;
             border: none;
             padding: 10px 20px;
+            font-weight: bold;
         }
         button:hover{
-            background-color: gold;
+            background-color: green;
             color: white;
         }
 
@@ -192,9 +193,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['username'], $_POST['em
 </head>
 <body>
 <header>
-    <nav class="navbar navbar-expand-lg " style="background-color:orange; margin-bottom: 0">
+    <nav class="navbar navbar-expand-lg " style="background-color:dodgerblue; margin-bottom: 0">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">SYGP</a>
+            <a class="navbar-brand" href="../Dashboard/acceuil.php">SYGP</a>
         </div>
     </nav>
 </header>
@@ -204,7 +205,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['username'], $_POST['em
 
     <form action="inscription.php" method="POST">
         <div class="container">
-            <h2>INSCRIPTION</h2>
+            <h2 style="color: green;" >INSCRIPTION</h2>
             <?php if (!empty($message)): ?>
                 <p style="color:red"><?= $message ?></p>
             <?php endif; ?>
@@ -221,13 +222,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['username'], $_POST['em
             <button type="submit">S'inscrire</button>
             <div>
 
-                <a href='connexion.php' class='btn btn-primary'>Connectez-Vous</a>
-                <p style="color: forestgreen">Si Vous avez déja un compte </p>
+                <a href='connexion.php'  class='btn btn-primary'>Connectez-Vous</a>
+                <p style="color: orange">Si Vous avez déja un compte </p>
                 <?php
 
-                echo "<a href='#' class='btn1 primary-success'>Continuer avec Google</a>";
+                //echo "<a href='#' class='btn1 primary-success'>Continuer avec Google</a>";
 
-                echo "<a href='#' class='btn1 primary-success'>Continuer avec Microsoft</a>";
+                //echo "<a href='#' class='btn1 primary-success'>Continuer avec Microsoft</a>";
 
 
                 ?>

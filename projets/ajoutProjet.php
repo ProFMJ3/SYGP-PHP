@@ -170,7 +170,7 @@ if (!isset($_SESSION['idUser'])){
             align-items: center;
             padding: 10px;
             margin: 20px 0;
-            background-color: gray;
+            background-color: lightgray;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 

@@ -270,7 +270,8 @@ else{
         .div-taches h4{
             margin-top: 20px;
             text-align: center;
-            color: #0dcaf0;
+            color: black;
+            font-weight: bold;
         }
         .div-taches a {
             text-decoration: none;
@@ -391,6 +392,7 @@ else{
         </div>
 
         <div class="projet">
+            <h3 class="text-center fw-bold">Vos collaborations </h3>
 
 
             <?php

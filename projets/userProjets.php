@@ -381,7 +381,7 @@ if (isset($_SESSION['idUser'])) {
                         {
                             ?>
 
-                            <option class="form-control" value="<?=htmlspecialchars($resultats['idProjet']);?>"> <?php echo(($resultats['nomProjet'])); ?> </option>
+                            <option class="form-control" value="<?=intval($resultats['idProjet']);?>"> <?php echo(($resultats['nomProjet'])); ?> </option>
 
                             <?php
                         } ;
@@ -392,7 +392,7 @@ if (isset($_SESSION['idUser'])) {
                 </select>
 
                 <input class="form-control"  type="text" id="nom" name="nom" placeholder="username du collaborateur" required>
-                <button type="submit" class="btn btn-primary " href="#">Collaborer</button>
+                <button type="submit" class="btn btn-primary">Collaborer</button>
 
             </form>
         </div>
